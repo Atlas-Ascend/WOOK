@@ -1,0 +1,13 @@
+{
+  "_resourceType": "background",
+  "id": "6c4e1201-2808-482f-bc58-1f6fb844a78d",
+  "name": "The Questionable Campground",
+  "symbol": "bg_wook_campground",
+  "tileColors": "",
+  "filename": "wook-campground.png",
+  "width": 20,
+  "height": 18,
+  "imageWidth": 160,
+  "imageHeight": 144,
+  "autoColor": false
+}

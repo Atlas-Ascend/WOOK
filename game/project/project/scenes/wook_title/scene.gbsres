@@ -1,0 +1,82 @@
+{
+  "_resourceType": "scene",
+  "id": "7cb45771-594e-4de3-a000-e5e490df3480",
+  "_index": 0,
+
+  "type": "TOPDOWN",
+
+  "name": "WOOK — Title",
+
+  "symbol": "scene_wook_title",
+
+  "x": 0,
+  "y": 0,
+
+  "width": 20,
+  "height": 18,
+
+  "backgroundId": "d8568215-a7a7-4199-bdd0-0d0f05aa46c1",
+
+  "tilesetId": "",
+
+  "colorModeOverride": "none",
+
+  "paletteIds": [],
+  "spritePaletteIds": [],
+
+  "autoFadeSpeed": 1,
+
+  "script": [
+
+    {
+      "id": "2b19f014-fce5-4cba-bf1d-000000000001",
+      "command": "EVENT_ACTOR_DEACTIVATE",
+      "args": {
+        "actorId": "player"
+      }
+    },
+
+    {
+      "id": "2b19f014-fce5-4cba-bf1d-000000000002",
+      "command": "EVENT_AWAIT_INPUT",
+      "args": {
+        "input": [
+          "a",
+          "b",
+          "start",
+          "select"
+        ]
+      }
+    },
+
+    {
+      "id": "2b19f014-fce5-4cba-bf1d-000000000003",
+      "command": "EVENT_SWITCH_SCENE",
+      "args": {
+
+        "sceneId": "56a8f9bb-34d2-46f6-b818-713af683e38e",
+
+        "x": {
+          "type": "number",
+          "value": 10
+        },
+
+        "y": {
+          "type": "number",
+          "value": 9
+        },
+
+        "direction": "down",
+
+        "fadeSpeed": "2"
+      }
+    }
+
+  ],
+
+  "playerHit1Script": [],
+  "playerHit2Script": [],
+  "playerHit3Script": [],
+
+  "collisions": ""
+}

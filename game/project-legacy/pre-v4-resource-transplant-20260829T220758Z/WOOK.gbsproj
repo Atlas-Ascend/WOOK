@@ -1,0 +1,126 @@
+{
+  "name": "WOOK",
+  "author": "Atlas-Ascend",
+  "_version": "3.1.0",
+  "_release": "3",
+  "scenes": [
+    {
+      "id": "7cb45771-594e-4de3-a000-e5e490df3480",
+      "name": "WOOK \u2014 Title",
+      "backgroundId": "d8568215-a7a7-4199-bdd0-0d0f05aa46c1",
+      "x": 0,
+      "y": 0,
+      "width": 20,
+      "height": 18,
+      "actors": [],
+      "triggers": [],
+      "collisions": [],
+      "script": [
+        {
+          "id": "da3768b7-1d95-459d-b352-14a24d180053",
+          "command": "EVENT_ACTOR_DEACTIVATE",
+          "args": {
+            "actorId": "player"
+          }
+        },
+        {
+          "id": "7b237d17-097e-47db-afe3-52fc1d0beaeb",
+          "command": "EVENT_AWAIT_INPUT",
+          "args": {
+            "input": [
+              "a",
+              "b",
+              "start"
+            ]
+          }
+        },
+        {
+          "id": "903938f1-417e-4a28-84f4-0bc1702a41f6",
+          "command": "EVENT_SWITCH_SCENE",
+          "args": {
+            "sceneId": "56a8f9bb-34d2-46f6-b818-713af683e38e",
+            "x": 10,
+            "y": 9,
+            "direction": "down",
+            "fadeSpeed": "2"
+          }
+        }
+      ],
+      "playerHit1Script": [],
+      "playerHit2Script": [],
+      "playerHit3Script": [],
+      "type": "TOPDOWN",
+      "symbol": "scene_wook_title"
+    },
+    {
+      "id": "56a8f9bb-34d2-46f6-b818-713af683e38e",
+      "name": "The Questionable Campground",
+      "backgroundId": "6c4e1201-2808-482f-bc58-1f6fb844a78d",
+      "x": 240,
+      "y": 0,
+      "width": 40,
+      "height": 36,
+      "actors": [],
+      "triggers": [],
+      "collisions": [],
+      "script": [
+        {
+          "id": "eaa2bd33-f77c-4b67-bf0c-ce73080668d4",
+          "command": "EVENT_TEXT",
+          "args": {
+            "text": "You wake up.\\nYour Crocs are gone.\\nBattery: 17%.",
+            "avatarId": ""
+          }
+        }
+      ],
+      "playerHit1Script": [],
+      "playerHit2Script": [],
+      "playerHit3Script": [],
+      "type": "TOPDOWN",
+      "symbol": "scene_questionable_campground"
+    }
+  ],
+  "backgrounds": [
+    {
+      "id": "d8568215-a7a7-4199-bdd0-0d0f05aa46c1",
+      "name": "title",
+      "symbol": "bg_wook_title",
+      "width": 40,
+      "height": 36,
+      "filename": "title.png",
+      "imageWidth": 320,
+      "imageHeight": 288
+    },
+    {
+      "id": "6c4e1201-2808-482f-bc58-1f6fb844a78d",
+      "name": "questionable-campground",
+      "symbol": "bg_questionable_campground",
+      "width": 40,
+      "height": 36,
+      "filename": "questionable-campground.png",
+      "imageWidth": 320,
+      "imageHeight": 288
+    }
+  ],
+  "spriteSheets": [],
+  "palettes": [],
+  "customEvents": [],
+  "variables": [],
+  "music": [],
+  "sounds": [],
+  "fonts": [],
+  "avatars": [],
+  "emotes": [],
+  "tilesets": [],
+  "settings": {
+    "startSceneId": "7cb45771-594e-4de3-a000-e5e490df3480",
+    "startX": 0,
+    "startY": 0,
+    "startDirection": "down",
+    "showCollisions": true,
+    "showConnections": true,
+    "worldScrollX": 0,
+    "worldScrollY": 0,
+    "zoom": 100
+  }
+}

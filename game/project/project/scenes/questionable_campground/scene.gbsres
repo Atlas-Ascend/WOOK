@@ -1,0 +1,49 @@
+{
+  "_resourceType": "scene",
+
+  "id": "56a8f9bb-34d2-46f6-b818-713af683e38e",
+
+  "_index": 1,
+
+  "type": "TOPDOWN",
+
+  "name": "The Questionable Campground",
+
+  "symbol": "scene_questionable_campground",
+
+  "x": 240,
+  "y": 0,
+
+  "width": 20,
+  "height": 18,
+
+  "backgroundId": "6c4e1201-2808-482f-bc58-1f6fb844a78d",
+
+  "tilesetId": "",
+
+  "colorModeOverride": "none",
+
+  "paletteIds": [],
+  "spritePaletteIds": [],
+
+  "autoFadeSpeed": 1,
+
+  "script": [
+
+    {
+      "id": "7fd62851-e674-4894-ace4-000000000001",
+      "command": "EVENT_TEXT",
+
+      "args": {
+        "text": "You wake up.\nYour Crocs are gone.\nYour phone is at 17%.\nSomehow, this is everyone else's fault."
+      }
+    }
+
+  ],
+
+  "playerHit1Script": [],
+  "playerHit2Script": [],
+  "playerHit3Script": [],
+
+  "collisions": ""
+}
