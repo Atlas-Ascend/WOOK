@@ -1,7 +1,8 @@
-schema: wook.character-asset-contract.v1
+schema: wook.character-asset-contract.v2
 campaign: GA-WOOK-V4-CHARACTER-DETAIL-001
 engine: GB Studio 4.3.2
 baseline: native-v4-proven
+canon_status: frozen
 
 laws:
   - no_toolchain_rebuild_without_failed_diagnostic
@@ -9,6 +10,9 @@ laws:
   - no_unbound_production_art_counts_as_complete
   - source_art_and_native_exports_are_separate
   - stable_resource_ids_preferred_over_asset_churn
+  - canonical_named_cast_only_in_forward_production
+  - deprecated_placeholder_names_are_provenance_only
+  - unnamed_supporting_roles_remain_functional_until_intentionally_named
 
 paths:
   source_root: art/source/characters
@@ -17,10 +21,37 @@ paths:
   scenes: game/project/project/scenes
   proof: docs/proof/receipts
 
+canonical_named_cast:
+  - papa_wook
+  - train_station
+  - loki
+  - the_wizard
+  - bufo_d_clown
+  - handstand_dan
+  - sniffany
+
+deprecated_placeholder_identities:
+  - moonbeam_jessica
+  - sage_trevor
+  - trent
+  - space_dave
+  - solar_charger_guy
+  - dj_maybe_greg
+  - lost_kyle
+  - vanessa_van_person
+
+migration_law:
+  aliases_allowed: false
+  automatic_one_to_one_identity_mapping: false
+  historical_receipts_may_retain_legacy_strings: true
+  new_gbsres_may_use_legacy_identity: false
+  new_dialogue_may_use_legacy_identity: false
+
 characters:
   papa_wook:
     tier: A
     symbol: spr_papa_wook
+    narrative_function: hero
     required:
       directions: [up, down, left, right]
       animation_groups:
@@ -55,53 +86,94 @@ characters:
         - phone_event
         - quest_complete_event
 
-  moonbeam_jessica:
+  train_station:
     tier: B
-    symbol: spr_moonbeam_jessica
+    symbol: spr_train_station
+    narrative_function: threshold_guide_and_logistics_oracle
     required:
       directions: [up, down, left, right]
-      animation_groups: [idle, walk, skeptical, amused]
+      animation_groups: [idle, walk, point_route, hurry, wait]
+      portraits: [neutral, certain, urgent, bafflingly_calm, delighted]
+      native_bindings:
+        - ga_camping_actor
+        - venue_gate_actor
+        - route_dialogue
+        - road_home_callback
+
+  loki:
+    tier: B
+    symbol: spr_loki
+    narrative_function: trickster_and_alternate_reality_hinge
+    required:
+      directions: [up, down, left, right]
+      animation_groups: [idle, walk, grin, misdirect, exit]
+      portraits: [neutral, amused, plotting, sincere, unreadable]
+      native_bindings:
+        - night_camp_actor
+        - sidequest_branch
+        - alternate_reality_trigger
+        - consequence_callback
+
+  the_wizard:
+    tier: B
+    symbol: spr_the_wizard
+    narrative_function: mentor_and_pattern_recognizer
+    required:
+      directions: [down, left, right]
+      animation_groups: [idle, walk, revelation, point, stillness]
+      portraits: [neutral, grave, amused, revelation, practical]
+      native_bindings:
+        - ga_or_venue_actor
+        - ordeal_foreshadow
+        - cosmic_callback
+        - deep_lore_dialogue
+
+  bufo_d_clown:
+    tier: B
+    symbol: spr_bufo_d_clown
+    narrative_function: performance_character_and_clown_prophet
+    required:
+      directions: [up, down, left, right]
+      animation_groups: [idle, walk, perform, prop_gag, bow, sincere]
+      portraits: [neutral, delighted, manic_focus, sincere, deadpan]
+      native_bindings:
+        - venue_actor
+        - performance_sidequest
+        - spectacle_event
+        - night_callback
+
+  handstand_dan:
+    tier: B
+    symbol: spr_handstand_dan
+    narrative_function: physical_comedy_and_skill_challenge
+    required:
+      directions: [down, left, right]
+      animation_groups: [idle, walk, handstand, wobble, recover, victory]
+      portraits: [neutral, focused, upside_down, delighted]
+      native_bindings:
+        - campground_actor
+        - festival_actor
+        - minigame_trigger
+        - sidequest_callback
+
+  sniffany:
+    tier: B
+    symbol: spr_sniffany
+    narrative_function: recurring_social_anchor
+    required:
+      directions: [up, down, left, right]
+      animation_groups: [idle, walk, skeptical, amused, serious]
       portraits: [neutral, skeptical, amused, serious, exasperated, impressed]
-      native_bindings: [campground_actor, dialogue_portraits, quest_flag]
-
-  sage_trevor:
-    tier: B
-    symbol: spr_sage_trevor
-    required:
-      directions: [down, left, right]
-      animation_groups: [idle, walk, mystic, revelation]
-      portraits: [neutral, grave, confident, porta_potty, practical]
-      native_bindings: [campground_or_dungeon_actor, dialogue_portraits]
-
-  trent:
-    tier: B
-    symbol: spr_trent
-    required:
-      directions: [down, left, right]
-      animation_groups: [idle, trade, annoyed]
-      portraits: [neutral, transactional, skeptical, satisfied]
-      native_bindings: [trader_actor, trader_screen]
-
-  space_dave:
-    tier: B
-    symbol: spr_space_dave
-    required:
-      directions: [down, left, right]
-      animation_groups: [idle, walk, drift]
-      portraits: [neutral, distant, delighted, confused]
-      native_bindings: [festival_or_parking_actor, dialogue_portraits]
-
-  solar_charger_guy:
-    tier: B
-    symbol: spr_solar_charger_guy
-    required:
-      directions: [down, left, right]
-      animation_groups: [idle, cable_fuss, point]
-      portraits: [neutral, focused, proud, concerned]
-      native_bindings: [campground_actor, dialogue_portraits, battery_event]
+      native_bindings:
+        - golden_scene_actor
+        - dialogue_portraits
+        - quest_flag
+        - four_am_callback
+        - ordeal_callback
 
   raccoon:
     tier: D
+    named_cast: false
     symbol: spr_raccoon
     required:
       animation_groups: [idle, alert, snack_accept, retreat]
@@ -133,9 +205,16 @@ first_implementation_slice:
   sequence:
     - papa_wook_player_binding
     - papa_wook_four_direction_locomotion
-    - moonbeam_jessica_actor_and_portraits
+    - sniffany_actor_and_portraits
     - raccoon_actor_and_encounter
     - authored_dialogue_pagination
     - native_web_build
     - native_rom_build
     - screenshot_visual_contract_review
+
+next_named_character_sequence:
+  - handstand_dan
+  - train_station
+  - bufo_d_clown
+  - loki
+  - the_wizard
