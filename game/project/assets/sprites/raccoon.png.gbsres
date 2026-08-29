@@ -1,0 +1,129 @@
+{
+  "_resourceType": "sprite",
+  "id": "a401bba1-1e10-4a44-9001-000000000003",
+  "name": "raccoon",
+  "symbol": "sprite_raccoon",
+  "states": [
+    {
+      "id": "3007af90-b9c8-5b93-bd7c-5f76da7754f8",
+      "name": "",
+      "animationType": "fixed",
+      "flipLeft": false,
+      "animations": [
+        {
+          "id": "4054d36c-d229-56e2-b5f0-8ce8b6a2a4dc",
+          "frames": [
+            {
+              "id": "737219a0-cc89-5904-9422-7113b3e325cc",
+              "tiles": [
+                {
+                  "id": "842b10c4-a8db-5aed-b7a7-0e3d3250b7f1",
+                  "x": 0,
+                  "y": 0,
+                  "sliceX": 0,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                },
+                {
+                  "id": "cf8c313d-2056-59cc-9147-677f09ef0a37",
+                  "x": 8,
+                  "y": 0,
+                  "sliceX": 8,
+                  "sliceY": 0,
+                  "flipX": false,
+                  "flipY": false,
+                  "palette": 0,
+                  "paletteIndex": 0,
+                  "objPalette": "OBP0",
+                  "priority": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "3bfa7715-efeb-5f1e-ba9d-f5a846bba858",
+          "frames": [
+            {
+              "id": "57fdbeb8-3c6f-5ad8-8f9a-9ee2814555ac",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d56c1349-bf6b-5ff9-96dc-ade97b6fc1a8",
+          "frames": [
+            {
+              "id": "060381bb-aeaf-5bef-bcbc-3ef080d6a3cb",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "8212ffcd-e246-542c-b450-aa53786b66e4",
+          "frames": [
+            {
+              "id": "c64a4427-bc04-537e-a8b7-13906375a044",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "c79015e8-9206-5bec-8e97-4c07c01f9834",
+          "frames": [
+            {
+              "id": "623b2b3e-ddcb-5e1b-bbee-593158069fb2",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "d7d17bdc-73e2-5a98-85b3-8fcfe0ec0a9d",
+          "frames": [
+            {
+              "id": "39153ef8-27c9-5050-b2a2-214aba58f70b",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "884b8c53-02a3-51d8-a275-5e2f0d3f2aad",
+          "frames": [
+            {
+              "id": "f78093d1-27ae-5084-8f14-51646308d8e9",
+              "tiles": []
+            }
+          ]
+        },
+        {
+          "id": "cf1f496c-04ee-5eea-8beb-f4b675295fa8",
+          "frames": [
+            {
+              "id": "bb9db66b-a075-54a1-abf4-e70945adde40",
+              "tiles": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "numTiles": 2,
+  "canvasOriginX": 0,
+  "canvasOriginY": 0,
+  "canvasWidth": 16,
+  "canvasHeight": 16,
+  "boundsX": 0,
+  "boundsY": -8,
+  "boundsWidth": 16,
+  "boundsHeight": 16,
+  "animSpeed": 15,
+  "filename": "raccoon.png",
+  "width": 16,
+  "height": 16,
+  "checksum": "5d0f2b483570a1734ce6f380c868a5fcae11257d"
+}
