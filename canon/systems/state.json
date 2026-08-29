@@ -1,0 +1,22 @@
+{
+  "game": "WOOK",
+  "version": "0.1.0",
+  "player": {
+    "shoes": 0,
+    "battery": 17,
+    "vibes": 0,
+    "responsibility": 0
+  },
+  "flags": {
+    "WOOK_STARTED": 0,
+    "MET_PAPA_WOOK": 0,
+    "LEFT_CROC_FOUND": 0,
+    "RIGHT_CROC_FOUND": 0,
+    "HAS_BOTH_SHOES": 0,
+    "CAMP_EXIT_UNLOCKED": 0,
+    "LEFT_CAMP": 0
+  },
+  "quests": {
+    "WHERE_ARE_MY_SHOES": 0
+  }
+}
