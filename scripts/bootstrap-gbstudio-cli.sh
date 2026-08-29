@@ -27,9 +27,9 @@ npm run make:cli
 CLI="$(find "$SRC" -type f \( -name gb-studio-cli -o -name gb-studio-cli.js \) 2>/dev/null | head -1)"
 test -n "$CLI"
 if [[ "$CLI" == *.js ]]; then
-  printf "#!/bin/bash\nexec node %q \"\\$@\"\n" "$CLI" > /usr/local/bin/gb-studio-cli
+  printf "#!/bin/bash\nexec node %q \"\$@\"\n" "$CLI" > /usr/local/bin/gb-studio-cli
 else
-  printf "#!/bin/bash\nexec %q \"\\$@\"\n" "$CLI" > /usr/local/bin/gb-studio-cli
+  printf "#!/bin/bash\nexec %q \"\$@\"\n" "$CLI" > /usr/local/bin/gb-studio-cli
 fi
 chmod +x /usr/local/bin/gb-studio-cli
 command -v gb-studio-cli
