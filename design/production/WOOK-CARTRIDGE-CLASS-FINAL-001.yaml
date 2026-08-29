@@ -1,0 +1,132 @@
+schema: wook.cartridge-class.final-package.v1
+package_id: WOOK-V4-CARTRIDGE-CLASS-FINAL-001
+branch: architecture/character-detail-level10
+engine_baseline: GB Studio 4.3.2
+status: architecture_assembled
+
+product:
+  title: WOOK
+  subtitle: PRESS START, PROBABLY.
+  structure: hero_journey_festival_weekend_cosmic_return
+  final_word: OH.
+
+canonical_cast:
+  - papa_wook
+  - train_station
+  - loki
+  - the_wizard
+  - bufo_d_clown
+  - handstand_dan
+  - sniffany
+
+recurring_secondary:
+  - moonbeam
+  - dr_bronner
+  - crystalpher
+  - amethyst
+  - moldavite_mike
+
+chapters:
+  - C0_where_are_my_shoes
+  - C1_general_admission
+  - C2_through_the_gates
+  - C3_lit_family_reunion_day_one
+  - C4_after_the_show
+  - C5_alternate_reality
+  - C6_0400_am
+  - C7_the_ordeal
+  - C8_day_two_mastery
+  - C9_night_two
+  - C10_final_festival_day
+  - C11_the_last_night
+  - C12_pack_down_goodbyes
+  - C13_the_road_home
+  - C14_cosmic_journey
+  - C15_oh
+
+systems:
+  - battery
+  - vibes
+  - responsibility
+  - wook_karma
+  - groundscore
+  - cash
+  - inventory
+  - phone
+  - quest_log
+  - map
+  - festival_schedule
+  - character_affinity
+  - trading
+  - encounters
+  - minigames
+  - dungeons
+  - world_state_variants
+  - save_reload
+
+primary_dungeons:
+  - porta_potty_labyrinth
+  - totem_forest
+  - memory_constellation
+
+platform_lanes:
+  gb:
+    status: proven_baseline
+  dx:
+    status: recommended_next_experiment_after_golden_slice
+  wook16:
+    status: optional_future_port
+
+golden_slice:
+  map: questionable_campground
+  required:
+    - papa_wook_player
+    - sniffany_actor
+    - handstand_dan_actor
+    - raccoon_encounter
+    - crocs_quest
+    - collision
+    - inventory
+    - quest_log
+    - phone
+    - hud
+    - groundscore
+    - side_quest
+    - secret
+    - save_reload
+    - ga_main_lane_exit
+    - native_web
+    - rom
+    - visual_qa
+    - proof_receipt
+
+sdlc_gates:
+  - requirements
+  - architecture
+  - resource_validation
+  - native_compile
+  - functional_test
+  - failure_mode_test
+  - presentation_qa
+  - regression
+  - artifact_hash
+  - release_receipt
+
+release_blockers:
+  - critical_softlock
+  - corrupted_save
+  - invalid_resource_graph
+  - native_web_fail
+  - rom_fail
+  - canonical_cast_fail
+  - critical_path_fail
+  - save_reload_fail
+
+source_documents:
+  - design/production/WOOK-CARTRIDGE-CLASS-FINAL-PACKAGE.md
+  - design/gameplay/WOOK-FULL-GAMEPLAY-MAP-BY-MAP.md
+  - design/systems/WOOK-HUD-STATE-RUNTIME-ARCHITECTURE.md
+  - design/production/WOOK-SDLC-COMMAND-TO-PROOF.md
+  - design/qa/WOOK-AEROSPACE-GRADE-VERIFICATION-MATRIX.md
+  - design/platform/WOOK-ROM-PLATFORM-UPGRADE-ADR.md
+  - design/characters/WOOKIE-RESERVE-ROSTER.md
