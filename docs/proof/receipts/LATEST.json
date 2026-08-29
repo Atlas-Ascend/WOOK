@@ -1,0 +1,23 @@
+{
+  "schema": "ghost-atlas.wook.v4.cart-team.proof.v1",
+  "timestamp": "20260829T213612Z",
+  "engine": "GB Studio",
+  "proof": {
+    "native": "FAIL",
+    "githack_http": "200",
+    "vercel_http": "NA",
+    "cloudflare_http": "NA"
+  },
+  "urls": {
+    "githack": "https://raw.githack.com/Atlas-Ascend/WOOK/main/site/index.html",
+    "vercel": "",
+    "cloudflare": ""
+  },
+  "hashes": {
+    "rom": "",
+    "site_router": "cfcbe428771b8f14e70a60f9b8c0c05871c600347f02ebb77e47c09f874ab044",
+    "visual_board_a": "bbf70169e106d78bf8cb3048eb21ad87dbbf93311c93af1bcc554506d52f1079",
+    "visual_board_b": "5dbecc979533609e96595541de2f181b013ce46714a298eafa112daab57a5a2d"
+  },
+  "result": "WOOK_V4_PUBLIC_PROOF_PASS"
+}
