@@ -1,0 +1,141 @@
+SYSTEM:
+You awaken behind a tent.
+
+SYSTEM:
+You do not remember going to sleep behind this tent.
+
+SYSTEM:
+This is apparently your problem now.
+
+SYSTEM:
+SHOES: 0/2
+
+SYSTEM:
+BATTERY: 17%
+
+SYSTEM:
+VIBES: UNVERIFIED
+
+
+PAPA WOOK:
+Ah.
+
+PAPA WOOK:
+You're awake.
+
+PAPA WOOK:
+Do you have a lighter?
+
+THE WOOK:
+No.
+
+PAPA WOOK:
+Damn.
+
+PAPA WOOK:
+Then the prophecy was wrong.
+
+THE WOOK:
+What prophecy?
+
+PAPA WOOK:
+The one where you had a lighter.
+
+PAPA WOOK:
+Also, brother...
+
+PAPA WOOK:
+you appear to have lost both of your shoes.
+
+SYSTEM:
+QUEST ACQUIRED
+
+SYSTEM:
+WHERE ARE MY SHOES?
+
+
+SYSTEM:
+GROUND SCORE!
+
+SYSTEM:
+LEFT CROC ACQUIRED.
+
+SYSTEM:
+It smells familiar.
+
+SYSTEM:
+You decide not to investigate.
+
+
+MOONBEAM JESSICA:
+Please don't touch the altar.
+
+THE WOOK:
+That's my Croc.
+
+MOONBEAM JESSICA:
+Ownership is a colonial construct.
+
+THE WOOK:
+It's literally my Croc.
+
+MOONBEAM JESSICA:
+I hear you.
+
+THE WOOK:
+Can I hear my Croc?
+
+MOONBEAM JESSICA:
+...
+
+MOONBEAM JESSICA:
+What if we practiced non-attachment?
+
+THE WOOK:
+You first.
+
+SYSTEM:
+RIGHT CROC ACQUIRED.
+
+SYSTEM:
+MOONBEAM JESSICA'S VIBES TOWARD YOU
+HAVE BECOME COMPLICATED.
+
+
+SYSTEM:
+BOTH SHOES EQUIPPED.
+
+SYSTEM:
++5 RESPONSIBILITY
+
+SYSTEM:
+NEW ABILITY:
+
+SYSTEM:
+BASIC PREPAREDNESS
+
+
+PAPA WOOK:
+Before you go...
+
+PAPA WOOK:
+remember three things.
+
+PAPA WOOK:
+Hydrate.
+
+PAPA WOOK:
+Respect the land.
+
+PAPA WOOK:
+And never follow Space Dave
+into a financial opportunity.
+
+THE WOOK:
+Who is Space Dave?
+
+PAPA WOOK:
+Exactly.
+
+SYSTEM:
+THE FESTIVAL AWAITS.

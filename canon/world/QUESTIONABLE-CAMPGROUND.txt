@@ -1,0 +1,48 @@
+=================================================
+THE QUESTIONABLE CAMPGROUND
+=================================================
+
+PLAYER SPAWN
+    ↓
+
+Behind tent
+
+    ↓
+
+Papa Wook
+
+    ↓
+
+QUEST:
+WHERE ARE MY SHOES?
+
+       ┌─────────────┴─────────────┐
+       │                           │
+       ▼                           ▼
+
+LEFT CROC                  MOONBEAM JESSICA
+Groundscore                       │
+                                  ▼
+                             ALTAR CROC
+
+       │                           │
+       └─────────────┬─────────────┘
+                     ▼
+
+               SHOES 2 / 2
+
+                     ▼
+
+              +5 RESPONSIBILITY
+
+                     ▼
+
+               EXIT UNLOCKED
+
+                     ▼
+
+                 PAPA WOOK
+
+                     ▼
+
+              FESTIVAL GATE
