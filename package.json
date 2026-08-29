@@ -1,0 +1,14 @@
+{
+  "name": "wook-cart-team",
+  "private": true,
+  "version": "4.0.0",
+  "scripts": {
+    "serve": "python3 -m http.server 8080 -d site",
+    "cloudflare:deploy": "wrangler deploy",
+    "vercel:deploy": "vercel deploy site --prod --yes"
+  },
+  "devDependencies": {
+    "wrangler": "latest",
+    "vercel": "latest"
+  }
+}

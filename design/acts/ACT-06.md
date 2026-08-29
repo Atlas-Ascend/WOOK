@@ -1,22 +1,16 @@
 # ACT 06 — THE DESERT
 
-## Core Question
+## Core question
 **Why Is Trevor Here?**
 
-## Narrative Function
-Water, silence, Trevor, emotional clarity, preparation.
+## Production function
+Heat, water, reflection, preparedness, impossible Trevor.
 
-## GB Studio Production Package
-Each act is implemented as a scene cluster with:
-- exploration scenes
-- dialogue scenes
-- encounter scenes
-- phone/quest overlays
-- scene-local variables
-- global state callbacks
-- custom events for shared systems
-- explicit entrance/exit proof points
-- visual acceptance captures against the canonical WOOK contract
+## Scene-family requirements
+Exploration scene(s), authored dialogue scenes, one system spotlight, one memorable encounter or setpiece, optional side-quest nodes, explicit save checkpoint, transition card, and completion receipt marker.
 
-## Exit Proof
-An act is complete only when its main quest state reaches COMPLETE, required callbacks are written, and the next act transition is reachable in a clean save.
+## Art requirement
+Act-specific geometry and environmental props; never merely recolor the Campground.
+
+## Proof
+The act is considered implemented only when a clean save can enter it, complete its main quest, write state, and transition onward in the native build.

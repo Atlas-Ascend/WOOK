@@ -1,0 +1,26 @@
+name: WOOK V4 Cart Team
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Visual contract
+        run: |
+          test -s art/reference/WOOK-VISUAL-CONTRACT-LEVEL10-BOARD-A.png
+          test -s art/reference/WOOK-VISUAL-CONTRACT-LEVEL10-BOARD-B.png
+          sha256sum art/reference/*.png
+      - name: Golden scene
+        run: |
+          test -s site/golden/index.html
+          test -s game/assets/backgrounds/act1-golden-campground.png
+          test -s game/assets/sprites/papa-wook.png
+      - name: GB Studio source
+        run: |
+          python -m json.tool game/project/WOOK.gbsproj >/dev/null
+          echo GB_STUDIO_SOURCE=PASS

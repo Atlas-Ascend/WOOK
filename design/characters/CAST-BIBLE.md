@@ -1,46 +1,31 @@
-# CAST BIBLE
+# Cast Bible
 
 ## Papa Wook
-**Role:** Player
-
-Beard, hat, sunglasses, practical mystic energy. Starts disorganized; becomes dependable.
+Player. Practical mystic / accidental responsible adult.
 
 ## Moonbeam Jessica
-**Role:** Act I social anchor
-
-Fast, funny, competent, and philosophically capable of defending why your Croc is in an altar.
-
-## Space Dave
-**Role:** Economics
-
-An IOU with a human body. Somehow useful when it matters.
+Act I social anchor. Smart enough to win an argument and kind enough to give the Croc back eventually.
 
 ## Sage Trevor
-**Role:** Desert / metaphysics
+Possesses impossible geographic mobility and questionable philosophical timing.
 
-Appears where Trevor absolutely should not be.
+## Space Dave
+An unsecured debt instrument wearing pants.
+
+## Trent
+Trader. Has receipts. This makes him unusually dangerous.
 
 ## Solar Charger Guy
-**Role:** Utility oracle
-
-Everyone knows him. Nobody knows his name.
-
-## Raccoon
-**Role:** Encounter
-
-Not a villain. A negotiating party with strong leverage.
-
-## Vanessa Van Person
-**Role:** Road
-
-Might own the van. Confidence varies by dialogue choice.
+Everyone knows who you mean. Nobody knows his name.
 
 ## DJ Maybe Greg
-**Role:** Festival
-
 Has been 'on in twenty minutes' for three hours.
 
-## Lost Kid Kyle
-**Role:** Responsibility arc
+## Lost Kyle
+A responsibility pivot: helping him is the first time usefulness stops feeling like a punishment.
 
-The moment Papa Wook realizes being useful feels good.
+## Vanessa Van Person
+May own the van. Must establish ownership before Act V is allowed to become a road movie.
+
+## Raccoon
+Negotiating party. Never treated as a generic enemy.
