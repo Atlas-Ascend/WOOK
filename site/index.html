@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>WOOK — Press Start, Probably.</title>
+<style>
+:root{--ink:#11150f;--dark:#2d3526;--mid:#586347;--light:#a6a984;--paper:#dad6ae}
+*{box-sizing:border-box}body{margin:0;background:#070907;color:var(--paper);font-family:monospace;display:flex;justify-content:center}
+#game{width:min(100vw,720px);background:var(--dark);min-height:100vh;border-left:3px solid var(--paper);border-right:3px solid var(--paper)}
+header{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:var(--ink);font-weight:bold;font-size:clamp(14px,3vw,25px);letter-spacing:3px}
+#viewport{position:relative;aspect-ratio:160/144;overflow:hidden;background:#000;image-rendering:pixelated}
+#world{position:absolute;inset:0;background:url("assets/campground-level10.png") center/cover no-repeat}
+.actor{position:absolute;width:13%;aspect-ratio:2/1;background-size:400% 200%;background-repeat:no-repeat;image-rendering:pixelated;z-index:5}
+#papa{background-image:url("assets/papa-wook-level10.png");left:47%;top:50%}
+#jessica{background-image:url("assets/moonbeam-jessica-level10.png");left:69%;top:36%}
+#raccoon{background-image:url("assets/raccoon-level10.png");left:31%;top:68%}
+#hud{position:absolute;top:8px;left:8px;background:var(--paper);color:var(--ink);border:3px double var(--ink);padding:6px 8px;font-weight:bold;font-size:clamp(9px,2vw,14px);z-index:20}
+#dialog{position:absolute;bottom:5px;left:5px;right:5px;min-height:30%;background:var(--paper);color:var(--ink);border:5px double var(--ink);padding:12px;z-index:30}
+#speaker{font-weight:bold;margin-bottom:8px}#dialogbutton{float:right;padding:7px 15px;border:2px solid var(--ink);background:var(--paper);font-family:inherit;font-weight:bold}
+#controls{padding:12px;background:var(--light);display:grid;grid-template-columns:64px 64px 64px;gap:7px;justify-content:center}
+#controls button{height:54px;border:3px solid var(--ink);background:var(--paper);font-size:20px;font-weight:bold}.blank{visibility:hidden}
+#status{color:var(--ink);background:var(--paper);padding:13px;display:grid;grid-template-columns:1fr 1fr;gap:10px}.panel{border:3px double var(--ink);padding:10px;min-height:120px}.panel h3{margin:0 0 8px}
+@media(max-width:500px){#status{grid-template-columns:1fr}#controls{grid-template-columns:58px 58px 58px}}
+</style>
+</head>
+<body>
+<main id="game">
+<header><span>WOOK</span><span>PRESS START, PROBABLY.</span></header>
+<section id="viewport">
+<div id="world"></div>
+<div id="hud">BATTERY <span id="battery">17%</span><br>VIBES <span id="vibes">72</span><br>CROCS <span id="crocs">0/2</span></div>
+<div id="papa" class="actor"></div><div id="jessica" class="actor"></div><div id="raccoon" class="actor"></div>
+<div id="dialog"><div id="speaker">SYSTEM</div><div id="dialogtext">You wake up.<br>Your Crocs are gone.<br>Your phone is at 17%.<br>Somehow, this is everyone else's fault.</div><br><button id="dialogbutton">OK</button></div>
+</section>
+<section id="controls">
+<span class="blank"></span><button data-d="up">▲</button><span class="blank"></span>
+<button data-d="left">◀</button><button id="action">A</button><button data-d="right">▶</button>
+<span class="blank"></span><button data-d="down">▼</button><button id="phone">☎</button>
+</section>
+<section id="status">
+<div class="panel"><h3>MAIN QUEST</h3><b>WHERE ARE MY SHOES?</b><p id="quest">☐ Talk to Jessica<br>☐ Search the tents<br>☐ Ask Sage Trevor<br>☐ Find both Crocs</p></div>
+<div class="panel"><h3>INVENTORY</h3>Water Bottle ×1<br>Half Sandwich ×1<br>Festival Wristband ×1<br>Broken Headlamp ×1<br>Sunscreen (Empty) ×1<br>Croc (Left) ×0<br>Croc (Right) ×0</div>
+</section>
+</main>
+<script>
+const papa=document.getElementById("papa"),dialog=document.getElementById("dialog"),dialogtext=document.getElementById("dialogtext"),speaker=document.getElementById("speaker");
+let state={x:47,y:50,battery:17,vibes:72,crocs:0,jessica:false,raccoon:false};
+function render(){papa.style.left=state.x+"%";papa.style.top=state.y+"%";battery.textContent=state.battery+"%";vibes.textContent=state.vibes;crocs.textContent=state.crocs+"/2";}
+function say(who,text){speaker.textContent=who;dialogtext.innerHTML=text;dialog.style.display="block";}
+dialogbutton.onclick=()=>dialog.style.display="none";
+document.querySelectorAll("[data-d]").forEach(button=>button.onclick=()=>{const d=button.dataset.d;if(d==="up")state.y-=4;if(d==="down")state.y+=4;if(d==="left")state.x-=4;if(d==="right")state.x+=4;state.x=Math.max(7,Math.min(91,state.x));state.y=Math.max(12,Math.min(85,state.y));render();});
+phone.onclick=()=>{state.battery=Math.max(0,state.battery-1);say("PHONE","BATTERY "+state.battery+"%<br><br>CONTACTS<br>MESSAGES<br>GPS (LOW POWER)<br>QUEST LOG<br>FLASHLIGHT");render();};
+action.onclick=()=>{
+if(state.x>61&&state.y<50&&!state.jessica){state.jessica=true;say("MOONBEAM JESSICA","Oh my god.<br>You finally woke up.<br><br>PAPA WOOK:<br>Define finally.");return;}
+if(state.x<41&&state.y>58&&!state.raccoon){state.raccoon=true;state.vibes+=3;say("SYSTEM","RACCOON APPROACHES!<br><br>▶ OFFER SNACK<br>  INTIMIDATE<br>  DISCUSS BOUNDARIES<br>  ACCEPT LOSS");render();return;}
+if(state.x>80&&state.y>65&&state.crocs<2){state.crocs++;say("SYSTEM","ITEM FOUND!<br><br>CROC ("+(state.crocs===1?"LEFT":"RIGHT")+")<br><br>It smells like enlightenment<br>and questionable choices.");render();return;}
+say("PAPA WOOK","Nothing here is currently asking to become a quest.<br>Suspicious.");
+};
+render();
+</script>
+</body>
+</html>
