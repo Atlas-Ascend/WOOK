@@ -3,7 +3,10 @@ set -Eeuo pipefail
 
 ###############################################################################
 # WOOK V4 — WOOK-CHAR-GOLDEN-001
-# EXISTING ASSETS -> GB STUDIO 4 RESOURCES -> ACTORS -> NATIVE WEB + ROM
+# CANONICAL CAST -> GB STUDIO 4 RESOURCES -> NATIVE WEB + ROM
+#
+# ACTIVE GOLDEN SCENE:
+#   PAPA WOOK + SNIFFANY + RACCOON
 #
 # DOES NOT:
 #   reinstall Node/Ubuntu/GBDK/GB Studio
@@ -26,24 +29,25 @@ WEB="$ROOT/releases/native/web"
 ROM="$ROOT/releases/native/rom/WOOK.gb"
 
 PAPA_ID="a401bba1-1e10-4a44-9001-000000000001"
-JESSICA_ID="a401bba1-1e10-4a44-9001-000000000002"
+SNIFFANY_ID="a401bba1-1e10-4a44-9001-000000000002"
 RACCOON_ID="a401bba1-1e10-4a44-9001-000000000003"
 PAPA_AVATAR_ID="a401bba1-1e10-4a44-9001-000000000101"
-JESSICA_AVATAR_ID="a401bba1-1e10-4a44-9001-000000000102"
+SNIFFANY_AVATAR_ID="a401bba1-1e10-4a44-9001-000000000102"
 RACCOON_AVATAR_ID="a401bba1-1e10-4a44-9001-000000000103"
 
 cd "$ROOT"
 
 echo
 echo "======================================================================"
-echo " WOOK-CHAR-GOLDEN-001 // CHARACTER DETAIL IMPLEMENTATION"
+echo " WOOK-CHAR-GOLDEN-001 // CANONICAL CHARACTER IMPLEMENTATION"
+echo " PAPA WOOK + SNIFFANY + RACCOON"
 echo "======================================================================"
 
 ###############################################################################
 # 01 — AUDIT ONLY THE REQUIRED EXISTING BASELINE
 ###############################################################################
 
-echo "[01/08] BASELINE AUDIT"
+echo "[01/09] BASELINE AUDIT"
 
 for F in \
   "$PROJECT/WOOK.gbsproj" \
@@ -52,11 +56,19 @@ for F in \
   "$SPRITES/actor_animated.png.gbsres" \
   "$SPRITES/static.png.gbsres" \
   "$ROOT/game/assets/sprites/papa-wook.png" \
-  "$ROOT/game/assets/sprites/moonbeam-jessica.png" \
   "$ROOT/game/assets/sprites/raccoon.png"
 do
   test -s "$F" || { echo "MISSING=$F"; exit 10; }
 done
+
+# Sniffany may already have canonical source art. During migration only, the
+# previous social-anchor artwork is permitted as an input donor. The resulting
+# native resource is always named/symbolized as Sniffany.
+if [ ! -s "$ROOT/game/assets/sprites/sniffany.png" ] && \
+   [ ! -s "$ROOT/game/assets/sprites/moonbeam-jessica.png" ]; then
+  echo "SNIFFANY_SOURCE=MISSING"
+  exit 11
+fi
 
 proot-distro login ubuntu \
   --shared-tmp \
@@ -69,17 +81,17 @@ echo "BASELINE=PASS"
 # 02 — PRESERVE CURRENT NATIVE PROJECT BODY
 ###############################################################################
 
-echo "[02/08] PRESERVE"
+echo "[02/09] PRESERVE"
 mkdir -p "$BACKUP"
 cp -a "$PROJECT/." "$BACKUP/"
 echo "PROJECT_BACKUP=$BACKUP"
 echo "PRESERVE=PASS"
 
 ###############################################################################
-# 03 — MATERIALIZE CHARACTER RESOURCE FAMILY
+# 03 — MATERIALIZE CANONICAL CHARACTER RESOURCE FAMILY
 ###############################################################################
 
-echo "[03/08] CHARACTER RESOURCE FACTORY"
+echo "[03/09] CHARACTER RESOURCE FACTORY"
 
 python - "$ROOT" <<'PY'
 from pathlib import Path
@@ -101,12 +113,12 @@ AVATARS.mkdir(parents=True, exist_ok=True)
 (SCENE_DIR / "actors").mkdir(parents=True, exist_ok=True)
 
 PAPA_ID = "a401bba1-1e10-4a44-9001-000000000001"
-JESSICA_ID = "a401bba1-1e10-4a44-9001-000000000002"
+SNIFFANY_ID = "a401bba1-1e10-4a44-9001-000000000002"
 RACCOON_ID = "a401bba1-1e10-4a44-9001-000000000003"
 PAPA_AVATAR_ID = "a401bba1-1e10-4a44-9001-000000000101"
-JESSICA_AVATAR_ID = "a401bba1-1e10-4a44-9001-000000000102"
+SNIFFANY_AVATAR_ID = "a401bba1-1e10-4a44-9001-000000000102"
 RACCOON_AVATAR_ID = "a401bba1-1e10-4a44-9001-000000000103"
-JESSICA_ACTOR_ID = "a401bba1-1e10-4a44-9001-000000001001"
+SNIFFANY_ACTOR_ID = "a401bba1-1e10-4a44-9001-000000001001"
 RACCOON_ACTOR_ID = "a401bba1-1e10-4a44-9001-000000001002"
 
 NS = uuid.UUID("3d57e9c2-8b26-4b04-a0d5-8593ab046c44")
@@ -138,8 +150,7 @@ def first_frame(src: Path, dst: Path):
     im = Image.open(src).convert("RGBA")
     if im.width < 16 or im.height < 16:
         raise RuntimeError(f"Sprite too small: {src} {im.size}")
-    frame = im.crop((0, 0, 16, 16))
-    frame.save(dst)
+    im.crop((0, 0, 16, 16)).save(dst)
 
 def six_frame_sheet(src: Path, dst: Path):
     im = Image.open(src).convert("RGBA")
@@ -157,22 +168,38 @@ def avatar_from(src: Path, dst: Path, sprite=False):
     if sprite:
         im = im.crop((0, 0, min(16, im.width), min(16, im.height)))
     else:
-        # Preserve face composition; GB Studio avatar resources are 16x16.
         side = min(im.width, im.height)
         left = max(0, (im.width - side)//2)
         top = max(0, (im.height - side)//2)
         im = im.crop((left, top, left + side, top + side))
-    im = im.resize((16, 16), Image.Resampling.NEAREST)
-    im.save(dst)
+    im.resize((16, 16), Image.Resampling.NEAREST).save(dst)
 
 def write_json(path: Path, obj):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=2) + "\n")
 
-# ---------------------------------------------------------------------------
-# PLAYER — PAPA WOOK
-# Reuse the official animated actor resource grammar, but bind it to WOOK art.
-# ---------------------------------------------------------------------------
+# Resolve canonical Sniffany source. Legacy filename is a migration donor only.
+sniffany_source = SRC_SPRITES / "sniffany.png"
+if not sniffany_source.exists():
+    sniffany_source = SRC_SPRITES / "moonbeam-jessica.png"
+
+sniffany_avatar_source = SRC_AVATARS / "sniffany-neutral.png"
+if not sniffany_avatar_source.exists():
+    legacy_avatar = SRC_AVATARS / "moonbeam-jessica-neutral.png"
+    sniffany_avatar_source = legacy_avatar if legacy_avatar.exists() else sniffany_source
+
+# Remove any previously-materialized deprecated active runtime resources.
+for p in [
+    SPRITES / "moonbeam-jessica.png",
+    SPRITES / "moonbeam-jessica.png.gbsres",
+    AVATARS / "moonbeam-jessica-neutral.png",
+    AVATARS / "moonbeam-jessica-neutral.png.gbsres",
+    SCENE_DIR / "actors/moonbeam_jessica.gbsres",
+]:
+    if p.exists():
+        p.unlink()
+
+# Papa Wook — hero resource.
 papa_png = SPRITES / "papa-wook.png"
 six_frame_sheet(SRC_SPRITES / "papa-wook.png", papa_png)
 animated_template = json.loads((SPRITES / "actor_animated.png.gbsres").read_text())
@@ -186,19 +213,15 @@ papa["height"] = 16
 papa["checksum"] = sha1(papa_png)
 write_json(SPRITES / "papa-wook.png.gbsres", papa)
 
-# ---------------------------------------------------------------------------
-# PRINCIPAL NPC — MOONBEAM JESSICA
-# First implementation uses a high-readability fixed overworld frame + portrait.
-# Animation family remains independently expandable under the architecture.
-# ---------------------------------------------------------------------------
+# Static template for first-pass principal NPC and creature resources.
 static_template = json.loads((SPRITES / "static.png.gbsres").read_text())
 
-def make_static_sprite(name, symbol, source, root_id):
+def make_static_sprite(name, display_name, symbol, source, root_id):
     png = SPRITES / f"{name}.png"
     first_frame(source, png)
     res = reuuid(copy.deepcopy(static_template), name)
     res["id"] = root_id
-    res["name"] = name
+    res["name"] = display_name
     res["symbol"] = symbol
     res["filename"] = f"{name}.png"
     res["width"] = 16
@@ -206,33 +229,28 @@ def make_static_sprite(name, symbol, source, root_id):
     res["checksum"] = sha1(png)
     write_json(SPRITES / f"{name}.png.gbsres", res)
 
-make_static_sprite("moonbeam-jessica", "sprite_moonbeam_jessica", SRC_SPRITES / "moonbeam-jessica.png", JESSICA_ID)
-make_static_sprite("raccoon", "sprite_raccoon", SRC_SPRITES / "raccoon.png", RACCOON_ID)
+make_static_sprite("sniffany", "Sniffany", "sprite_sniffany", sniffany_source, SNIFFANY_ID)
+make_static_sprite("raccoon", "Raccoon", "sprite_raccoon", SRC_SPRITES / "raccoon.png", RACCOON_ID)
 
-# ---------------------------------------------------------------------------
-# PORTRAIT FAMILY — actual GB Studio avatar resources
-# ---------------------------------------------------------------------------
-def avatar_resource(name, source, avatar_id, sprite=False):
+# Native avatar resources.
+def avatar_resource(name, display_name, source, avatar_id, sprite=False):
     png = AVATARS / f"{name}.png"
     avatar_from(source, png, sprite=sprite)
     write_json(AVATARS / f"{name}.png.gbsres", {
         "_resourceType": "avatar",
         "id": avatar_id,
-        "name": name,
+        "name": display_name,
         "width": 16,
         "height": 16,
         "filename": f"{name}.png"
     })
 
 papa_portrait = SRC_AVATARS / "papa-wook-neutral.png"
-jess_portrait = SRC_AVATARS / "moonbeam-jessica-neutral.png"
-avatar_resource("papa-wook-neutral", papa_portrait if papa_portrait.exists() else SRC_SPRITES / "papa-wook.png", PAPA_AVATAR_ID, sprite=not papa_portrait.exists())
-avatar_resource("moonbeam-jessica-neutral", jess_portrait if jess_portrait.exists() else SRC_SPRITES / "moonbeam-jessica.png", JESSICA_AVATAR_ID, sprite=not jess_portrait.exists())
-avatar_resource("raccoon", SRC_SPRITES / "raccoon.png", RACCOON_AVATAR_ID, sprite=True)
+avatar_resource("papa-wook-neutral", "Papa Wook — Neutral", papa_portrait if papa_portrait.exists() else SRC_SPRITES / "papa-wook.png", PAPA_AVATAR_ID, sprite=not papa_portrait.exists())
+avatar_resource("sniffany-neutral", "Sniffany — Neutral", sniffany_avatar_source, SNIFFANY_AVATAR_ID, sprite=sniffany_avatar_source == sniffany_source)
+avatar_resource("raccoon", "Raccoon", SRC_SPRITES / "raccoon.png", RACCOON_AVATAR_ID, sprite=True)
 
-# ---------------------------------------------------------------------------
-# PLAYER BINDING — replace template actor as the default TOPDOWN body.
-# ---------------------------------------------------------------------------
+# Papa Wook becomes default player body.
 settings = json.loads(SETTINGS.read_text())
 settings.setdefault("defaultPlayerSprites", {})
 for k in ["TOPDOWN", "PLATFORM", "ADVENTURE", "SHMUP", "POINTNCLICK", "LOGO"]:
@@ -240,10 +258,7 @@ for k in ["TOPDOWN", "PLATFORM", "ADVENTURE", "SHMUP", "POINTNCLICK", "LOGO"]:
 settings["startAnimSpeed"] = 15
 write_json(SETTINGS, settings)
 
-# ---------------------------------------------------------------------------
-# PAGINATED INTRO — cartridge-authored pages, not browser-length prose.
-# EVENT_ACTOR_SET_SPRITE also activates the player in GB Studio 4.3.
-# ---------------------------------------------------------------------------
+# Cartridge-authored intro. EVENT_ACTOR_SET_SPRITE also activates the player.
 scene = json.loads(SCENE.read_text())
 scene["script"] = [
     {
@@ -269,9 +284,7 @@ scene["script"] = [
 ]
 write_json(SCENE, scene)
 
-# ---------------------------------------------------------------------------
-# ACTORS — GB Studio 4 actor resources are independent .gbsres files.
-# ---------------------------------------------------------------------------
+# Actor grammar.
 def actor_resource(actor_id, index, name, symbol, sprite_id, x, y, script):
     return {
         "_resourceType": "actor",
@@ -303,21 +316,21 @@ def actor_resource(actor_id, index, name, symbol, sprite_id, x, y, script):
         "hit3Script": []
     }
 
-jess_script = [
+sniffany_script = [
     {
-        "id": uid("jessica/dialogue-1"),
+        "id": uid("sniffany/dialogue-1"),
         "command": "EVENT_TEXT",
-        "args": {"text": "MOONBEAM JESSICA\nOh my god.\nYou finally woke up.", "avatarId": JESSICA_AVATAR_ID}
+        "args": {"text": "SNIFFANY\nOh my god.\nYou finally woke up.", "avatarId": SNIFFANY_AVATAR_ID}
     },
     {
-        "id": uid("jessica/dialogue-2"),
+        "id": uid("sniffany/dialogue-2"),
         "command": "EVENT_TEXT",
-        "args": {"text": "PAPA WOOK\nWhere are my Crocs?", "avatarId": PAPA_AVATAR_ID}
+        "args": {"text": "PAPA WOOK\nDefine finally.", "avatarId": PAPA_AVATAR_ID}
     },
     {
-        "id": uid("jessica/dialogue-3"),
+        "id": uid("sniffany/dialogue-3"),
         "command": "EVENT_TEXT",
-        "args": {"text": "Start with the tents.\nThen maybe ask\nthe raccoon.", "avatarId": JESSICA_AVATAR_ID}
+        "args": {"text": "Start with the tents.\nThen maybe ask\nthe raccoon.", "avatarId": SNIFFANY_AVATAR_ID}
     }
 ]
 
@@ -349,57 +362,59 @@ raccoon_script = [
     }
 ]
 
-write_json(SCENE_DIR / "actors/moonbeam_jessica.gbsres", actor_resource(
-    JESSICA_ACTOR_ID, 0, "Moonbeam Jessica", "actor_moonbeam_jessica", JESSICA_ID, 14, 6, jess_script
+write_json(SCENE_DIR / "actors/sniffany.gbsres", actor_resource(
+    SNIFFANY_ACTOR_ID, 0, "Sniffany", "actor_sniffany", SNIFFANY_ID, 14, 6, sniffany_script
 ))
 write_json(SCENE_DIR / "actors/raccoon.gbsres", actor_resource(
     RACCOON_ACTOR_ID, 1, "Raccoon", "actor_raccoon", RACCOON_ID, 5, 12, raccoon_script
 ))
 
-# Machine-readable implementation manifest.
 manifest = {
-    "schema": "ghost-atlas.wook.character-golden.v1",
+    "schema": "ghost-atlas.wook.character-golden.v2",
     "packet": "WOOK-CHAR-GOLDEN-001",
-    "player": {"sprite": PAPA_ID, "avatar": PAPA_AVATAR_ID},
+    "canon": ["Papa Wook", "Train Station", "Loki", "The Wizard", "Bufo D' Clown", "Handstand Dan", "Sniffany"],
+    "player": {"name": "Papa Wook", "sprite": PAPA_ID, "avatar": PAPA_AVATAR_ID},
     "actors": {
-        "moonbeam_jessica": {"actor": JESSICA_ACTOR_ID, "sprite": JESSICA_ID, "avatar": JESSICA_AVATAR_ID},
+        "sniffany": {"actor": SNIFFANY_ACTOR_ID, "sprite": SNIFFANY_ID, "avatar": SNIFFANY_AVATAR_ID},
         "raccoon": {"actor": RACCOON_ACTOR_ID, "sprite": RACCOON_ID, "avatar": RACCOON_AVATAR_ID}
     },
     "requirements": {
         "player_visible": True,
         "intro_paginated": True,
-        "jessica_interactive": True,
-        "raccoon_menu": True
+        "sniffany_interactive": True,
+        "raccoon_menu": True,
+        "canonical_runtime_names": True
     }
 }
 write_json(ROOT / "docs/proof/CHARACTER-GOLDEN-MANIFEST.json", manifest)
 
 print("CHARACTER_RESOURCES=PASS")
 print("PAPA_PLAYER_BINDING=PASS")
-print("JESSICA_ACTOR_RESOURCE=PASS")
+print("SNIFFANY_ACTOR_RESOURCE=PASS")
 print("RACCOON_ACTOR_RESOURCE=PASS")
 print("DIALOGUE_PAGINATION=PASS")
 PY
 
 ###############################################################################
-# 04 — RESOURCE GRAPH DIAGNOSTIC BEFORE COMPILER
+# 04 — RESOURCE GRAPH DIAGNOSTIC
 ###############################################################################
 
-echo "[04/08] RESOURCE GRAPH"
+echo "[04/09] RESOURCE GRAPH"
 
 for F in \
   "$SPRITES/papa-wook.png" \
   "$SPRITES/papa-wook.png.gbsres" \
-  "$SPRITES/moonbeam-jessica.png.gbsres" \
+  "$SPRITES/sniffany.png" \
+  "$SPRITES/sniffany.png.gbsres" \
   "$SPRITES/raccoon.png.gbsres" \
   "$AVATARS/papa-wook-neutral.png.gbsres" \
-  "$AVATARS/moonbeam-jessica-neutral.png.gbsres" \
+  "$AVATARS/sniffany-neutral.png.gbsres" \
   "$AVATARS/raccoon.png.gbsres" \
-  "$SCENE_DIR/actors/moonbeam_jessica.gbsres" \
+  "$SCENE_DIR/actors/sniffany.gbsres" \
   "$SCENE_DIR/actors/raccoon.gbsres"
 do
   test -s "$F" || { echo "RESOURCE_FAIL=$F"; exit 20; }
-  jq empty "$F" 2>/dev/null || true
+  case "$F" in *.gbsres) jq empty "$F" ;; esac
 done
 
 jq -e --arg id "$PAPA_ID" '.defaultPlayerSprites.TOPDOWN == $id' "$SETTINGS" >/dev/null
@@ -408,10 +423,17 @@ jq -e --arg id "$PAPA_ID" '.script[0].args.spriteSheetId == $id' "$SCENE" >/dev/
 echo "RESOURCE_GRAPH=PASS"
 
 ###############################################################################
-# 05 — NATIVE COMPILE USING THE ALREADY-PROVEN FACTORY
+# 05 — CANONICAL NAMING GATE
 ###############################################################################
 
-echo "[05/08] NATIVE COMPILE"
+echo "[05/09] CANONICAL CAST AUDIT"
+bash "$ROOT/scripts/audit-canonical-cast.sh"
+
+###############################################################################
+# 06 — NATIVE COMPILE USING THE ALREADY-PROVEN FACTORY
+###############################################################################
+
+echo "[06/09] NATIVE COMPILE"
 rm -rf "$WEB"
 mkdir -p "$WEB" "$(dirname "$ROM")"
 rm -f "$ROM"
@@ -436,26 +458,25 @@ echo "GB_STUDIO_ROM=PASS"
 INNER
 
 ###############################################################################
-# 06 — PROMOTE NATIVE WEB
+# 07 — PROMOTE NATIVE WEB
 ###############################################################################
 
-echo "[06/08] PROMOTE"
+echo "[07/09] PROMOTE"
 rm -rf "$ROOT/site/gbstudio"
 mkdir -p "$ROOT/site/gbstudio"
 cp -a "$WEB/." "$ROOT/site/gbstudio/"
-
 test -s "$ROOT/site/gbstudio/index.html"
 echo "NATIVE_PROMOTION=PASS"
 
 ###############################################################################
-# 07 — PROOF RECEIPT
+# 08 — PROOF RECEIPT
 ###############################################################################
 
-echo "[07/08] PROOF"
+echo "[08/09] PROOF"
 ROM_SHA="$(sha256sum "$ROM" | awk '{print $1}')"
 WEB_SHA="$(sha256sum "$ROOT/site/gbstudio/index.html" | awk '{print $1}')"
 PAPA_SHA="$(sha256sum "$SPRITES/papa-wook.png" | awk '{print $1}')"
-JESS_SHA="$(sha256sum "$SPRITES/moonbeam-jessica.png" | awk '{print $1}')"
+SNIFFANY_SHA="$(sha256sum "$SPRITES/sniffany.png" | awk '{print $1}')"
 RACCOON_SHA="$(sha256sum "$SPRITES/raccoon.png" | awk '{print $1}')"
 
 mkdir -p "$ROOT/docs/proof/receipts"
@@ -466,23 +487,24 @@ jq -n \
   --arg rom "$ROM_SHA" \
   --arg web "$WEB_SHA" \
   --arg papa "$PAPA_SHA" \
-  --arg jessica "$JESS_SHA" \
+  --arg sniffany "$SNIFFANY_SHA" \
   --arg raccoon "$RACCOON_SHA" \
   '{
-    schema:"ghost-atlas.wook.character-golden-proof.v1",
+    schema:"ghost-atlas.wook.character-golden-proof.v2",
     packet:"WOOK-CHAR-GOLDEN-001",
     timestamp:$timestamp,
     proof:{
       existing_factory_reused:"PASS",
+      canonical_cast_audit:"PASS",
       papa_player_binding:"PASS",
-      jessica_actor:"PASS",
+      sniffany_actor:"PASS",
       raccoon_actor:"PASS",
       portrait_resources:"PASS",
       paginated_dialogue:"PASS",
       native_web:"PASS",
       native_rom:"PASS"
     },
-    hashes:{rom:$rom,native_web:$web,papa:$papa,jessica:$jessica,raccoon:$raccoon},
+    hashes:{rom:$rom,native_web:$web,papa:$papa,sniffany:$sniffany,raccoon:$raccoon},
     visual_qa:"PENDING_SCREENSHOT_REVIEW",
     result:"WOOK_CHAR_GOLDEN_NATIVE_PASS"
   }' > "$RECEIPT"
@@ -491,10 +513,10 @@ cp "$RECEIPT" "$ROOT/docs/proof/receipts/CHARACTER-GOLDEN-LATEST.json"
 cat "$RECEIPT"
 
 ###############################################################################
-# 08 — LOCAL COMMIT ONLY; PUSH CURRENT BRANCH EXPLICITLY
+# 09 — LOCAL COMMIT ONLY
 ###############################################################################
 
-echo "[08/08] VERSION"
+echo "[09/09] VERSION"
 git add \
   game/project \
   releases/native \
@@ -503,7 +525,7 @@ git add \
   docs/proof/receipts/CHARACTER-GOLDEN-LATEST.json \
   "$RECEIPT"
 
-git commit -m "WOOK-CHAR-GOLDEN-001: native Papa Jessica raccoon integration $STAMP" || true
+git commit -m "WOOK-CHAR-GOLDEN-001: native Papa Sniffany raccoon integration $STAMP" || true
 
 BRANCH="$(git branch --show-current)"
 echo "CURRENT_BRANCH=$BRANCH"
@@ -513,8 +535,9 @@ echo "======================================================================"
 echo " WOOK-CHAR-GOLDEN-001 = NATIVE PASS"
 echo "======================================================================"
 echo "PAPA_WOOK_PLAYER=PASS"
-echo "MOONBEAM_JESSICA=PASS"
+echo "SNIFFANY=PASS"
 echo "RACCOON_ENCOUNTER=PASS"
+echo "CANONICAL_CAST_AUDIT=PASS"
 echo "PORTRAIT_DIALOGUE=PASS"
 echo "GB_STUDIO_NATIVE_WEB=PASS"
 echo "GB_STUDIO_ROM=PASS"
