@@ -1,0 +1,53 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>WOOK — Press Start, Probably.</title>
+<style>
+:root{--ink:#11150f;--dark:#293226;--mid:#59634b;--light:#a4a784;--paper:#d8d4aa}
+*{box-sizing:border-box}body{margin:0;background:var(--ink);color:var(--ink);font-family:ui-monospace,monospace;display:grid;place-items:center;min-height:100vh}
+#shell{width:min(100vw,900px);background:var(--paper);border:4px solid var(--light);box-shadow:0 0 0 4px var(--ink),0 20px 80px #000}
+header{background:var(--ink);color:var(--paper);padding:10px 14px;display:flex;justify-content:space-between;font-weight:900;letter-spacing:2px}
+#screen{position:relative;aspect-ratio:10/9;background:#59634b;overflow:hidden;image-rendering:pixelated}
+#map{position:absolute;inset:0;background:url('assets/questionable-campground.png') center/cover no-repeat;filter:saturate(.7)}
+.actor{position:absolute;width:8%;aspect-ratio:1;background-size:contain;background-repeat:no-repeat;image-rendering:pixelated;transform:translate(-50%,-50%)}
+#papa{background-image:url('assets/papa-wook.png');left:50%;top:55%;z-index:5}
+#jessica{background-image:url('assets/moonbeam-jessica.png');left:68%;top:38%}
+#raccoon{background-image:url('assets/raccoon.png');left:35%;top:68%}
+.croc{background-image:url('assets/croc.png');left:27%;top:47%}
+#hud{position:absolute;left:8px;top:8px;background:var(--paper);border:3px solid var(--ink);padding:5px 8px;font-size:clamp(9px,2vw,14px);z-index:8}
+#dialog{position:absolute;left:3%;right:3%;bottom:3%;background:var(--paper);border:4px double var(--ink);padding:10px;min-height:24%;z-index:20;display:none}
+#speaker{font-weight:900;margin-bottom:6px}.buttons{position:absolute;right:10px;bottom:10px;display:flex;gap:8px;z-index:30}
+button{font:inherit;font-weight:900;border:2px solid var(--ink);background:var(--paper);padding:10px 14px;color:var(--ink)}
+#controls{display:grid;grid-template-columns:repeat(3,54px);gap:5px;padding:12px;justify-content:center;background:var(--light)}
+#controls button{height:48px}.spacer{visibility:hidden}
+#panel{padding:12px;background:var(--paper);display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px}
+.card{border:2px solid var(--ink);padding:8px}.quest{font-weight:900}
+@media(max-width:600px){#panel{grid-template-columns:1fr}.actor{width:11%}}
+</style></head>
+<body><main id="shell">
+<header><span>WOOK</span><span>PRESS START, PROBABLY.</span></header>
+<section id="screen"><div id="map"></div><div id="hud">BATTERY <b id="battery">17%</b><br>VIBES <b id="vibes">0</b><br>CROCS <b id="crocs">0/2</b></div>
+<div id="papa" class="actor"></div><div id="jessica" class="actor"></div><div id="raccoon" class="actor"></div><div id="croc1" class="actor croc"></div>
+<div id="dialog"><div id="speaker"></div><div id="text"></div><div class="buttons" id="choices"></div></div></section>
+<section id="controls"><span class="spacer"></span><button data-move="up">▲</button><span class="spacer"></span><button data-move="left">◀</button><button id="interact">A</button><button data-move="right">▶</button><span class="spacer"></span><button data-move="down">▼</button><button id="phone">PHONE</button></section>
+<section id="panel"><div class="card"><div class="quest">MAIN QUEST: WHERE ARE MY SHOES?</div><div id="quest">□ Talk to Jessica<br>□ Find both Crocs<br>□ Survive the raccoon</div></div><div class="card"><b>INVENTORY</b><div id="inventory">Half a Clif Bar<br>Mysterious Crystal<br>One Sock<br>Dead Vape</div></div></section>
+</main>
+<script>
+const papa=document.querySelector('#papa'),dialog=document.querySelector('#dialog'),speaker=document.querySelector('#speaker'),text=document.querySelector('#text'),choices=document.querySelector('#choices');
+let s={x:50,y:55,battery:17,vibes:0,crocs:0,jessica:false,raccoon:false,croc1:false,croc2:false,phone:false};
+function render(){papa.style.left=s.x+'%';papa.style.top=s.y+'%';battery.textContent=s.battery+'%';vibes.textContent=s.vibes;crocs.textContent=s.crocs+'/2';
+document.querySelector('#quest').innerHTML=(s.jessica?'☑':'□')+' Talk to Jessica<br>'+(s.crocs===2?'☑':'□')+' Find both Crocs<br>'+(s.raccoon?'☑':'□')+' Survive the raccoon';
+document.querySelector('#croc1').style.display=s.croc1?'none':'block';}
+function say(who,msg,opts=[]){speaker.textContent=who;text.textContent=msg;choices.innerHTML='';dialog.style.display='block';opts.forEach(([label,fn])=>{let b=document.createElement('button');b.textContent=label;b.onclick=()=>{dialog.style.display='none';fn()};choices.appendChild(b)});if(!opts.length){let b=document.createElement('button');b.textContent='OK';b.onclick=()=>dialog.style.display='none';choices.appendChild(b)}}
+function dist(ax,ay,bx,by){return Math.hypot(ax-bx,ay-by)}
+document.querySelectorAll('[data-move]').forEach(b=>b.onclick=()=>{let d=b.dataset.move;if(d==='up')s.y-=4;if(d==='down')s.y+=4;if(d==='left')s.x-=4;if(d==='right')s.x+=4;s.x=Math.max(5,Math.min(95,s.x));s.y=Math.max(8,Math.min(92,s.y));render()});
+document.querySelector('#interact').onclick=()=>{
+ if(!s.croc1&&dist(s.x,s.y,27,47)<12){s.croc1=true;s.crocs++;s.vibes+=3;document.querySelector('#inventory').innerHTML+='\<br>Left Croc';say('SYSTEM','GROUND SCORE! LEFT CROC ACQUIRED. It smells familiar. You choose not to investigate.');render();return}
+ if(dist(s.x,s.y,68,38)<14){if(!s.jessica){s.jessica=true;say('MOONBEAM JESSICA',"Oh my god. You finally woke up.",[['THAT\'S MY CROC',()=>{s.croc2=true;s.crocs++;s.vibes+=2;document.querySelector('#inventory').innerHTML+='\<br>Right Croc';say('JESSICA',"Ownership is a myth. But fine. Your gravel argument was compelling.");render()}],['DEFINE FINALLY',()=>say('JESSICA','Thursday. It is Saturday.')]])}else say('JESSICA','I am still processing the Croc discourse.');render();return}
+ if(dist(s.x,s.y,35,68)<13&&!s.raccoon){say('SYSTEM','RACCOON APPROACHES!',[['OFFER SNACK',()=>{s.raccoon=true;s.vibes+=5;say('SYSTEM','Diplomacy succeeds. The raccoon accepts one Clif Bar fragment.');render()}],['DISCUSS BOUNDARIES',()=>{s.raccoon=true;s.vibes+=2;say('SYSTEM','The raccoon does not agree, but respects the clarity.');render()}],['ACCEPT LOSS',()=>{s.raccoon=true;s.vibes-=1;say('SYSTEM','You lose the sandwich. You retain your dignity, narrowly.');render()}]]) ;return}
+ if(s.crocs===2&&s.x>85){say('PAPA WOOK','Both Crocs. Battery still alive. Terrifying levels of preparedness. ACT I COMPLETE.');return}
+ say('PAPA WOOK','Nothing here is currently asking to become a quest. Suspicious.');
+};
+document.querySelector('#phone').onclick=()=>{s.battery=Math.max(0,s.battery-1);say('PHONE — 17% WAS OPTIMISTIC','Contacts · Messages · GPS (Low Power) · Quest Log · Flashlight. Opening the phone costs 1%. This is now a survival game.');render()};
+say('SYSTEM','You wake up. Your Crocs are gone. Your phone is at 17%. Somehow, this is everyone else\'s fault.');
+render();
+</script></body></html>

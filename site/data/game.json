@@ -1,0 +1,54 @@
+{
+  "name": "WOOK",
+  "engine": "GB Studio",
+  "campaign": "GA-WOOK-COMMAND-TO-PROOF-OMEGA-001",
+  "acts": [
+    {
+      "act": "01",
+      "location": "THE CAMPGROUND",
+      "question": "Where Are My Shoes?"
+    },
+    {
+      "act": "02",
+      "location": "THE FESTIVAL",
+      "question": "Where Is Everyone?"
+    },
+    {
+      "act": "03",
+      "location": "THE PARKING LOT",
+      "question": "Where Is The Car?"
+    },
+    {
+      "act": "04",
+      "location": "THE TOWN",
+      "question": "Why Are We At Walmart?"
+    },
+    {
+      "act": "05",
+      "location": "THE ROAD",
+      "question": "Whose Van Is This?"
+    },
+    {
+      "act": "06",
+      "location": "THE DESERT",
+      "question": "Why Is Trevor Here?"
+    },
+    {
+      "act": "07",
+      "location": "THE COSMIC WOOK DIMENSION",
+      "question": "Oh."
+    }
+  ],
+  "systems": [
+    "battery",
+    "vibes",
+    "groundscore",
+    "responsibility",
+    "wook_karma",
+    "cash",
+    "inventory",
+    "phone",
+    "quest_log",
+    "encounters"
+  ]
+}
