@@ -2,13 +2,38 @@
 
 **Campaign:** GA-WOOK-V4-CHARACTER-DETAIL-001  
 **Baseline:** WOOK V4 native GB Studio 4.3.2 build is already proven.  
-**Purpose:** Increase character fidelity without rebuilding the toolchain, replacing the native project, or regressing command-to-proof.
+**Status:** active cartridge-class character architecture.  
+**Purpose:** increase character fidelity to commercial Game Boy / Nintendo-era craftsmanship without rebuilding the proven toolchain.
 
 ---
 
-## 1. Architectural law
+## 1. Canonical named cast
 
-Character quality is not a single sprite problem. It is a layered presentation system:
+Active named production identities:
+
+```text
+PAPA WOOK
+TRAIN STATION
+LOKI
+THE WIZARD
+BUFO D' CLOWN
+HANDSTAND DAN
+SNIFFANY
+```
+
+Additional names are introduced only intentionally.
+
+Supporting roles remain functional/unnamed until promoted into canon.
+
+Deprecated placeholder identities are provenance-only and are forbidden in new dialogue, quests, runtime resources, save keys, UI labels and active production filenames.
+
+There is **no automatic one-to-one mapping** from a deprecated placeholder to a canonical character.
+
+---
+
+## 2. Architectural law
+
+Character quality is a layered presentation system:
 
 ```text
 CHARACTER IDENTITY
@@ -32,23 +57,20 @@ NATIVE BUILD
 VISUAL QA
 ```
 
-No character is considered complete because one PNG exists.
+No character is complete because one PNG exists.
 
-A character is complete only when the required presentation layers are authored, bound into the GB Studio resource graph, exercised in a native scene, and visually verified against the canonical WOOK boards.
+A character is complete only when the presentation layers are authored, bound into the GB Studio resource graph, exercised in a native scene, compiled into web + ROM, and visually verified against the canonical WOOK boards.
 
 ---
 
-## 2. Character fidelity tiers
-
-WOOK uses four production tiers. This prevents every background NPC from consuming protagonist-level memory while ensuring important characters are visibly richer.
+## 3. Fidelity tiers
 
 ### Tier A — Hero
 
-Applies to:
-- Papa Wook
+**Papa Wook**
 
 Required:
-- full four-direction locomotion
+- four-direction locomotion
 - four-direction idle
 - turn frames
 - contextual poses
@@ -57,278 +79,127 @@ Required:
 - campfire sit
 - confusion reaction
 - dance loop
-- encounter negotiation pose
+- negotiation pose
 - exhausted pose
 - victory pose
 - 8+ dialogue portraits
-- special cutscene portraits
 - late-game animation variation
 
-### Tier B — Principal NPC
+### Tier B — Principal NPCs
 
-Applies to:
-- Moonbeam Jessica
-- Sage Trevor
-- Trent
-- Space Dave
-- Solar Charger Guy
+- Train Station
+- Loki
+- The Wizard
+- Bufo D' Clown
+- Handstand Dan
+- Sniffany
 
 Required:
-- four-direction idle
-- four-direction walk where narratively needed
-- 2–4 contextual poses
+- unmistakable silhouette
+- movement set appropriate to role
+- 2–5 contextual poses
 - 4+ portraits
 - one signature animation
 - scene-specific staging
+- at least one recurring-state callback
 
-### Tier C — Supporting NPC
+### Tier C — Supporting roles
 
 Examples:
-- DJ Maybe Greg
-- Lost Kyle
-- Vanessa Van Person
 - festival staff
 - camp neighbors
+- vendors
+- security
+- crowd performers
+- vehicle occupants
 
 Required:
 - one strong silhouette
-- two-direction or four-direction idle as needed
-- 1–2 walk loops
-- 1 portrait or portraitless dialogue by design
-- one readable prop/accessory marker
+- role-readable accessory
+- minimal but deliberate animation
+- functional role label unless intentionally promoted into named canon
 
-### Tier D — Encounter / Creature
+### Tier D — Creature / Encounter
 
 Examples:
 - raccoon
 - environmental creatures
 
 Required:
-- encounter silhouette
+- strong silhouette
 - idle motion
 - reaction motion
-- dedicated encounter composition
+- dedicated encounter composition where appropriate
 - non-generic interaction verbs
 
 ---
 
-## 3. Pixel density doctrine
+## 4. Pixel-density doctrine
 
-The current weakness is not simply sprite size; it is insufficient authored information per frame.
+The weakness being corrected is insufficient authored information per frame, not simply sprite size.
 
-### Overworld target
+Overworld frames must communicate the identity anchors that matter most.
 
-The overworld sprite must communicate, at a glance:
-- hat shape
-- hair / beard mass
-- eyewear
-- torso layering
-- backpack / gear mass
-- arm direction
-- foot stance
-- facing direction
-
-A Papa Wook frame that reads only as `hat + square body` fails.
-
-### Detail priority order
-
-When pixel budget is constrained, preserve in this order:
+Priority order:
 
 1. silhouette
 2. face framing
-3. hat / hair / beard
+3. headwear / hair / beard
 4. primary clothing mass
-5. backpack / prop
+5. signature prop
 6. hands / gesture
 7. secondary clothing texture
-8. tiny ornamentation
+8. micro-detail
 
 Tiny details that destroy silhouette clarity are rejected.
 
 ---
 
-## 4. Papa Wook master visual grammar
+## 5. Papa Wook master grammar
 
-Papa Wook must be recognizable in black silhouette and in four-color Game Boy rendering.
-
-### Mandatory identity anchors
-
-- broad brim or bucket-style hat mass
-- circular / rounded sunglasses
-- large beard mass
+Mandatory identity anchors:
+- broad hat mass
+- rounded sunglasses
+- full beard mass
 - layered outerwear
-- small utility pack / backpack
-- slightly wide, grounded stance
-- compact but expressive arm gestures
+- small utility pack
+- slightly wide grounded stance
+- compact expressive arm gestures
 
-### Proportion contract
-
-The design should avoid both extremes:
-- **too chibi:** giant head, unreadable clothing
-- **too realistic:** thin limb detail that collapses at Game Boy scale
-
-Target: readable adventure-RPG proportions with a head large enough to carry the hat/beard identity and a torso large enough to show layered clothing.
-
-### Motion personality
+### Motion arc
 
 Early game:
-- slightly loose timing
-- modest secondary bob
-- asymmetrical idle variation
+- loose timing
+- asymmetric idle
+- small secondary bob
 
 Late game:
-- more deliberate cadence
+- deliberate cadence
 - cleaner stance
 - same comic warmth
 
-The arc should be visible in motion without turning him into a different person.
+The hero visually changes through confidence and rhythm, not through becoming a different design.
 
 ---
 
-## 5. Overworld sprite architecture
+## 6. Canonical principal-NPC differentiation
 
-### Required Papa Wook animation groups
+| Character | Silhouette | Signature motion | Production function |
+|---|---|---|---|
+| Papa Wook | hat + beard + pack | loose-to-grounded walk | hero |
+| Train Station | travel/utility mass | route-point / hurry / wait | threshold + logistics |
+| Loki | asymmetric sharp silhouette | grin / misdirect / exit | trickster + alternate-reality hinge |
+| The Wizard | tall vertical mystic shape | profound stillness / revelation | mentor + pattern recognition |
+| Bufo D' Clown | unmistakable performer shape | prop gag / bow / performance | spectacle + clown prophet |
+| Handstand Dan | upright + inverted silhouette family | handstand / wobble / recover | physical comedy + skill challenge |
+| Sniffany | distinct hair/headwear + accessory | skeptical lean / amused reaction | recurring social anchor |
+| Raccoon | compact masked body + tail | alert / snack / retreat | creature encounter |
 
-```text
-papa_wook/
-├── idle/
-│   ├── down
-│   ├── up
-│   ├── left
-│   └── right
-├── walk/
-│   ├── down
-│   ├── up
-│   ├── left
-│   └── right
-├── reactions/
-│   ├── confused
-│   ├── delighted
-│   ├── annoyed
-│   └── exhausted
-├── context/
-│   ├── phone
-│   ├── item_get
-│   ├── campfire_sit
-│   ├── dance
-│   ├── negotiate
-│   └── victory
-└── cutscene/
-    ├── look_up
-    ├── look_down
-    └── freeze_pose
-```
-
-### Recommended cadence
-
-Locomotion should use compact loops with deliberate contact frames.
-
-For a 4-frame walk:
-
-```text
-CONTACT → PASS → CONTACT → PASS
-```
-
-Do not use vertical bob as the only evidence of walking.
-
-Arms, pack mass, and legs must visibly change.
+No two principal characters may share an unmodified silhouette family.
 
 ---
 
-## 6. Portrait architecture
-
-Portraits are the primary place where personality detail becomes visible.
-
-### Papa Wook required portrait set
-
-1. neutral
-2. confused
-3. delighted
-4. concerned
-5. annoyed
-6. enlightened / realization
-7. phone-focused
-8. victory
-9. exhausted
-10. deadpan
-11. suspicious
-12. unexpectedly responsible
-
-### Moonbeam Jessica
-
-1. neutral
-2. skeptical
-3. amused
-4. serious
-5. exasperated
-6. impressed
-
-### Sage Trevor
-
-1. neutral mystic
-2. grave wisdom
-3. impossible confidence
-4. porta-potty revelation
-5. unexpectedly practical
-
-### Portrait composition law
-
-Every portrait must preserve:
-- hair silhouette
-- headwear
-- face contour
-- eye treatment
-- mouth / beard geometry
-- one dominant emotional cue
-
-Portraits must not look like unrelated redraws of the same character.
-
----
-
-## 7. Character detail layers
-
-Every principal character is authored as layered design information even when the final output is flattened.
-
-```text
-BASE BODY
- + HEAD MASS
- + HAIR / BEARD
- + HEADWEAR
- + EYEWEAR
- + OUTERWEAR
- + PACK / PROP
- + HAND GESTURE
- + EXPRESSION
- + SHADOW / CONTACT
-```
-
-This architecture allows consistent regeneration and revision.
-
-If one character needs a new pose, the artist should not redraw identity from memory; the pose is assembled against the same visual grammar.
-
----
-
-## 8. NPC differentiation matrix
-
-NPC detail must create immediate social readability.
-
-| Character | Primary silhouette | Signature prop | Motion cue | Portrait cue |
-|---|---|---|---|---|
-| Papa Wook | hat + beard + pack | phone / Crocs | loose-to-grounded | sunglasses + beard |
-| Jessica | hair/headband mass | cup / wristband | impatient lean | expressive brows |
-| Trevor | hat + beard + long torso | staff / pouch | eerie stillness | intense eyes |
-| Trent | practical cap / trader stance | ledger / cash | transactional hand | raised brow |
-| Space Dave | lanky silhouette | mystery bag | drifting sway | distant grin |
-| Solar Charger Guy | utility gear silhouette | panel / cable | cable fussing | sunburnt focus |
-| Raccoon | compact masked body | snack target | alert tail | encounter close-up |
-
-No two principal NPCs should share an unmodified silhouette family.
-
----
-
-## 9. GB Studio implementation architecture
-
-Character detail must enter the existing native resource graph rather than live as unbound repo art.
+## 7. Native GB Studio resource architecture
 
 ```text
 art/source/characters/
@@ -337,86 +208,104 @@ production export
         ↓
 game/project/assets/sprites/
         ↓
-*.png.gbsres
+PNG + PNG.gbsres
         ↓
-GB Studio sprite resource IDs
+stable GB Studio resource ID
         ↓
-scene actors
+player / actor resource
         ↓
-actor scripts / animation state
+scene scripts + animation state
         ↓
 native web + WOOK.gb
 ```
 
-### Required resource bindings
-
-For each native character:
-- sprite PNG
-- matching `.gbsres`
-- stable resource ID
-- stable symbol
-- scene actor resource or player sprite binding
-- animation-state assignment
-
-### Naming law
-
-Use stable production names:
+Required native symbols:
 
 ```text
-spr_papa_wook
-spr_moonbeam_jessica
-spr_sage_trevor
-spr_trent
-spr_space_dave
-spr_solar_charger_guy
-spr_raccoon
+sprite_papa_wook
+sprite_train_station
+sprite_loki
+sprite_the_wizard
+sprite_bufo_d_clown
+sprite_handstand_dan
+sprite_sniffany
+sprite_raccoon
 ```
 
-Resource names may evolve visually; IDs should not churn without migration reason.
+Stable logical resource IDs should survive visual replacement whenever possible.
 
 ---
 
-## 10. Player architecture
+## 8. Source architecture
 
-Papa Wook is not a decorative NPC. The native player actor must use the authored hero sprite family.
+```text
+art/source/characters/
+├── papa-wook/
+├── train-station/
+├── loki/
+├── the-wizard/
+├── bufo-d-clown/
+├── handstand-dan/
+└── sniffany/
+```
 
-### Scene-entry contract
+Each principal directory should ultimately contain:
+
+```text
+model-sheet/
+silhouette/
+overworld/
+portraits/
+context-poses/
+exports/
+```
+
+Native-ready assets live separately in:
+
+```text
+game/project/assets/sprites/
+game/project/assets/avatars/
+```
+
+Legacy donor art may be used during migration, but native output must use canonical production identity.
+
+---
+
+## 9. Player architecture
+
+Papa Wook is the native player body, not a decorative actor.
 
 Every playable scene must verify:
 - player active
 - player visible
-- correct sprite resource assigned
-- valid spawn location
-- valid facing direction
-- player not trapped in collision
+- Papa Wook sprite assigned
+- valid spawn
+- valid facing
+- no collision trap
 
-The title scene may deactivate or hide the player, but every transition into gameplay must restore the player explicitly.
-
-This prevents the current failure mode where title-scene state leaks into the campground and Papa Wook becomes invisible.
+The title scene may hide/deactivate the player, but gameplay entry must restore him explicitly.
 
 ---
 
-## 11. Dialogue / portrait integration
+## 10. Dialogue and portrait architecture
 
-Character detail is only valuable if the dialogue presentation displays it.
-
-### Principal dialogue pattern
+Principal dialogue pattern:
 
 ```text
 PORTRAIT
 NAME
 1–3 authored lines
-advance marker
+ADVANCE
 ```
 
 Long prose is paginated manually.
 
-Do not send browser-length paragraphs into Game Boy dialogue boxes.
+The dialogue box is part of timing and performance.
 
-### Example
+### Golden Scene first principal dialogue
 
 ```text
-MOONBEAM JESSICA
+SNIFFANY
 
 Oh my god.
 You finally woke up.
@@ -430,129 +319,136 @@ PAPA WOOK
 Define "finally."
 ```
 
-This preserves timing, typography, comedy, and character identity.
+Sniffany becomes the first principal NPC used to validate recurring social-character presentation beside Papa Wook.
 
 ---
 
-## 12. Encounter presentation
+## 11. Signature character systems
 
-The raccoon encounter is a dedicated composition, not a normal map sprite with generic combat verbs.
+### Train Station
+- route guidance
+- threshold timing
+- meetup logic
+- venue-gate appearances
+- road-home callback
 
-Required:
-- larger raccoon encounter art
-- readable mask/tail/body detail
-- contextual menu
-- reaction frame after choice
-- consequence routed back to world state
+### Loki
+- side-quest branching
+- misdirection
+- consequence callbacks
+- alternate-reality transition
 
-Canonical verbs:
+### The Wizard
+- foreshadowing
+- ordeal preparation
+- hidden-system interpretation
+- cosmic callback
+
+### Bufo D' Clown
+- performance events
+- venue spectacle
+- prop interactions
+- comic/sincere tonal switch
+
+### Handstand Dan
+- physical minigames
+- movement challenges
+- inverted animation family
+- repeat festival callback
+
+### Sniffany
+- social continuity
+- quest-state callbacks
+- camp → venue → night → 4:00 AM → ordeal continuity
+- practical and emotional grounding
+
+---
+
+## 12. Raccoon encounter
+
+The raccoon remains a creature encounter rather than a named-cast slot.
+
+Required verbs:
 - OFFER SNACK
 - INTIMIDATE
 - DISCUSS BOUNDARIES
 - ACCEPT LOSS
 
-The interaction grammar itself is part of character architecture.
-
----
-
-## 13. Character-state model
-
-Characters require visual state, not just narrative state.
-
-Example Papa Wook state:
-
-```text
-visual_state:
-  locomotion: idle|walk
-  facing: up|down|left|right
-  pose: default|phone|item_get|sit|dance|negotiate|victory|exhausted
-  expression: neutral|confused|delighted|concerned|annoyed|enlightened
-  arc_phase: early|mid|late
-```
-
-The game does not need to expose this exact schema at runtime, but production files and scripts should map cleanly to these concepts.
-
----
-
-## 14. Production source architecture
-
-```text
-art/source/characters/
-├── papa-wook/
-│   ├── model-sheet/
-│   ├── silhouette/
-│   ├── overworld/
-│   ├── portraits/
-│   ├── context-poses/
-│   └── exports/
-├── moonbeam-jessica/
-├── sage-trevor/
-├── trent/
-├── space-dave/
-├── solar-charger-guy/
-└── raccoon/
-```
-
-Final native-ready assets live in:
-
-```text
-game/project/assets/sprites/
-game/project/assets/avatars/
-```
-
-Source art and compiled game assets are intentionally separate.
-
----
-
-## 15. Golden Scene implementation order
-
-Do not attempt all seven acts before character fidelity is proven.
-
-### Phase C1 — Papa Wook visibility
-- bind hero sprite
-- restore player after title
-- verify four directions
-
-### Phase C2 — Papa Wook locomotion fidelity
-- replace generic actor sheet
-- walk cycles
-- idle cycles
-
-### Phase C3 — Jessica
-- sprite
-- actor
-- portrait
-- dialogue
-
-### Phase C4 — Raccoon
+Required presentation:
 - map actor
-- encounter art
-- encounter menu
+- encounter close-up
+- reaction frame
+- persistent consequence
+- later callback potential
+
+---
+
+## 13. Golden Scene implementation order
+
+### C1 — Papa Wook
+- restore visibility
+- bind hero body
+- four-direction identity
+
+### C2 — Sniffany
+- canonical native sprite
+- actor
+- portraits
+- paginated dialogue
+- quest-state hook
+
+### C3 — Raccoon
+- map actor
+- encounter
+- menu
 - consequence
 
-### Phase C5 — Trevor cameo
-- sprite
-- portrait
-- signature dialogue
+### C4 — Handstand Dan
+- campground cameo
+- signature inverted animation
+- first physical side quest
 
-### Phase C6 — contextual hero poses
-- phone
-- item get
-- victory
-- sit
+### C5 — Train Station
+- route guidance
+- gate-transition setup
 
-### Phase C7 — visual QA
-- capture native screenshots
-- compare against Board A and Board B
-- score silhouette / portrait / density / composition
+### C6 — Bufo D' Clown
+- performance grammar seed
 
-Only after C7 passes does the character language propagate across Acts II–VII.
+### C7 — Loki
+- night-side-quest seed
+
+### C8 — The Wizard
+- foreshadowing seed
+
+### C9 — visual QA
+- native screenshot capture
+- compare against Board A/B
+- character score >= 9.0
+
+The named cast enters through authored scene roles, not as a crowd dump.
 
 ---
 
-## 16. Acceptance gates
+## 14. Naming non-regression gate
 
-A hero character passes only if all are true:
+Forward production fails if any deprecated placeholder identity appears in:
+- active scene `.gbsres`
+- active actor `.gbsres`
+- native sprite symbols
+- active dialogue
+- quest IDs
+- save-state keys
+- current UI labels
+- active production docs
+
+Historical receipts, archived branches and migration notes are exempt only when clearly marked provenance.
+
+---
+
+## 15. Cartridge-class acceptance
+
+Hero gate:
 
 ```text
 SILHOUETTE_READABILITY=PASS
@@ -568,74 +464,66 @@ ROM_BUILD=PASS
 VISUAL_CONTRACT_SCORE>=9
 ```
 
-A principal NPC passes only if:
+Principal-NPC gate:
 
 ```text
 DISTINCT_SILHOUETTE=PASS
+SIGNATURE_ANIMATION=PASS
 MAP_ACTOR=PASS
-SIGNATURE_POSE=PASS
 PORTRAIT_FAMILY=PASS
 DIALOGUE_PRESENTATION=PASS
+STATE_CALLBACK=PASS
 NATIVE_RENDER=PASS
 ```
 
+Level 10 means the player can identify who is on screen before reading the name.
+
 ---
 
-## 17. Non-regression law
+## 16. Non-regression law
 
-Character-detail work must not reopen proven infrastructure.
-
-Frozen unless a test proves otherwise:
+Frozen unless diagnostics prove failure:
 - GB Studio 4.3.2 CLI
-- Node / Ubuntu / GBDK toolchain
-- native resource project migration
-- ROM production path
-- GitHub publication path
-- GitHack publication path
+- Node / Ubuntu / GBDK
+- native 4.x migration
+- ROM build path
+- GitHub publication
+- GitHack publication
 
-Character work begins at the existing GB Studio project and ends at native proof.
-
----
-
-## 18. Definition of Level 10
-
-Level 10 does **not** mean maximum pixel count.
-
-It means:
-- immediately recognizable silhouettes
-- expressive faces
-- coherent animation
-- strong visual differentiation
-- authored staging
-- no placeholder actors
-- no generic default GB Studio sprite visible in a final scene
-- personality visible before dialogue is read
-- visual continuity between overworld, portrait, encounter, and cutscene art
-
-The target is the feeling that a specialized 1992 cartridge art team repeatedly refined every important character until no frame looked provisional.
+Character work begins at the existing native project and ends at screenshot proof.
 
 ---
 
-## 19. Command-to-proof handoff
+## 17. Command-to-proof handoff
 
 ```text
-CHARACTER ARCHITECTURE
+CANONICAL CAST
         ↓
-ASSET CONTRACT
+CHARACTER ASSET CONTRACT
         ↓
 PAPA WOOK HERO FAMILY
         ↓
-PRINCIPAL NPC FAMILIES
+SNIFFANY GOLDEN SCENE
+        ↓
+RACCOON ENCOUNTER
+        ↓
+HANDSTAND DAN
+        ↓
+TRAIN STATION
+        ↓
+BUFO D' CLOWN
+        ↓
+LOKI
+        ↓
+THE WIZARD
         ↓
 GB STUDIO RESOURCE BINDING
-        ↓
-GOLDEN SCENE
         ↓
 MAKE:WEB + MAKE:ROM
         ↓
 SCREENSHOT QA
         ↓
-VISUAL CONTRACT RECEIPT
+CARTRIDGE-CLASS CHARACTER RECEIPT
 ```
 
-**Next executable build target:** Papa Wook hero binding + Jessica + raccoon inside the already-proven native Act I scene.
+**Immediate executable target:** Papa Wook + Sniffany + raccoon in the already-proven Golden Campground, with deprecated placeholder identities removed from the active runtime graph.
