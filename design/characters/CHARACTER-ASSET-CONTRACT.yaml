@@ -1,0 +1,141 @@
+schema: wook.character-asset-contract.v1
+campaign: GA-WOOK-V4-CHARACTER-DETAIL-001
+engine: GB Studio 4.3.2
+baseline: native-v4-proven
+
+laws:
+  - no_toolchain_rebuild_without_failed_diagnostic
+  - no_default_gb_studio_actor_in_final_golden_scene
+  - no_unbound_production_art_counts_as_complete
+  - source_art_and_native_exports_are_separate
+  - stable_resource_ids_preferred_over_asset_churn
+
+paths:
+  source_root: art/source/characters
+  native_sprites: game/project/assets/sprites
+  native_avatars: game/project/assets/avatars
+  scenes: game/project/project/scenes
+  proof: docs/proof/receipts
+
+characters:
+  papa_wook:
+    tier: A
+    symbol: spr_papa_wook
+    required:
+      directions: [up, down, left, right]
+      animation_groups:
+        - idle
+        - walk
+        - phone
+        - item_get
+        - confused
+        - dance
+        - campfire_sit
+        - negotiate
+        - victory
+        - exhausted
+      portraits:
+        - neutral
+        - confused
+        - delighted
+        - concerned
+        - annoyed
+        - enlightened
+        - phone_focused
+        - victory
+        - exhausted
+        - deadpan
+        - suspicious
+        - responsible
+      native_bindings:
+        - player_sprite
+        - campground_spawn
+        - dialogue_portraits
+        - item_get_event
+        - phone_event
+        - quest_complete_event
+
+  moonbeam_jessica:
+    tier: B
+    symbol: spr_moonbeam_jessica
+    required:
+      directions: [up, down, left, right]
+      animation_groups: [idle, walk, skeptical, amused]
+      portraits: [neutral, skeptical, amused, serious, exasperated, impressed]
+      native_bindings: [campground_actor, dialogue_portraits, quest_flag]
+
+  sage_trevor:
+    tier: B
+    symbol: spr_sage_trevor
+    required:
+      directions: [down, left, right]
+      animation_groups: [idle, walk, mystic, revelation]
+      portraits: [neutral, grave, confident, porta_potty, practical]
+      native_bindings: [campground_or_dungeon_actor, dialogue_portraits]
+
+  trent:
+    tier: B
+    symbol: spr_trent
+    required:
+      directions: [down, left, right]
+      animation_groups: [idle, trade, annoyed]
+      portraits: [neutral, transactional, skeptical, satisfied]
+      native_bindings: [trader_actor, trader_screen]
+
+  space_dave:
+    tier: B
+    symbol: spr_space_dave
+    required:
+      directions: [down, left, right]
+      animation_groups: [idle, walk, drift]
+      portraits: [neutral, distant, delighted, confused]
+      native_bindings: [festival_or_parking_actor, dialogue_portraits]
+
+  solar_charger_guy:
+    tier: B
+    symbol: spr_solar_charger_guy
+    required:
+      directions: [down, left, right]
+      animation_groups: [idle, cable_fuss, point]
+      portraits: [neutral, focused, proud, concerned]
+      native_bindings: [campground_actor, dialogue_portraits, battery_event]
+
+  raccoon:
+    tier: D
+    symbol: spr_raccoon
+    required:
+      animation_groups: [idle, alert, snack_accept, retreat]
+      encounter_art: true
+      encounter_verbs:
+        - OFFER_SNACK
+        - INTIMIDATE
+        - DISCUSS_BOUNDARIES
+        - ACCEPT_LOSS
+      native_bindings: [campground_actor, encounter_scene, consequence_state]
+
+acceptance:
+  hero:
+    silhouette_readability: 10
+    portrait_expressiveness: 10
+    animation_minimum: 9
+    native_binding_required: true
+    visual_contract_minimum: 9
+  principal_npc:
+    distinct_silhouette: 10
+    portrait_expressiveness: 9
+    native_binding_required: true
+  encounter:
+    silhouette_readability: 10
+    dedicated_composition_required: true
+
+first_implementation_slice:
+  scene: The Questionable Campground
+  sequence:
+    - papa_wook_player_binding
+    - papa_wook_four_direction_locomotion
+    - moonbeam_jessica_actor_and_portraits
+    - raccoon_actor_and_encounter
+    - authored_dialogue_pagination
+    - native_web_build
+    - native_rom_build
+    - screenshot_visual_contract_review
