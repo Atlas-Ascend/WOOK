@@ -1,0 +1,22 @@
+{
+  "schema": "ghost-atlas.wook.v4.native-closure.v1",
+  "campaign": "GA-WOOK-V4-1992-CART-TEAM-001",
+  "timestamp": "20260829T221051Z",
+  "proof": {
+    "gb_studio_cli": "PASS",
+    "gb_studio_4_resource_graph": "PASS",
+    "native_web": "PASS",
+    "native_rom": "PASS",
+    "github": "PASS",
+    "githack": "PASS"
+  },
+  "hashes": {
+    "rom": "41915e236331c479a5c4e043442e7c79826c5e9b206327efeca4d1e9d4f8b4c8",
+    "native_web": "7b8d7fde1acbf808ebda30a9ce8104e77e9e9650d78c0ca17e41035f1cd0cd6f"
+  },
+  "publication": {
+    "commit": "b893b88ad7dae82e191d0c750fbefbcab60d41ff",
+    "native_url": "https://raw.githack.com/Atlas-Ascend/WOOK/main/site/gbstudio/index.html"
+  },
+  "result": "WOOK_V4_NATIVE_COMMAND_TO_PROOF_PASS"
+}
