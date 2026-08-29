@@ -26,29 +26,22 @@ DEPRECATED=(
   "Vanessa Van Person"
 )
 
-# `Trent` is checked separately to avoid incidental substring collisions.
+# Architecture/migration documents are intentionally allowed to record deprecated
+# strings as provenance. This gate inspects only active runtime and active story data.
+ACTIVE_PATHS=(
+  "game/project"
+  "design/quests"
+  "design/acts"
+)
 
 for NAME in "${CANONICAL[@]}"; do
   echo "CANONICAL=$NAME"
 done
 
-ACTIVE_PATHS=(
-  "game/project"
-  "design/characters"
-  "design/production"
-  "design/quests"
-  "design/acts"
-)
-
 FAIL=0
 
 for NAME in "${DEPRECATED[@]}"; do
-  if grep -RInF \
-    --exclude-dir='.git' \
-    --exclude='*.receipt*' \
-    --exclude='*LEGACY*' \
-    --exclude='*MIGRATION*' \
-    -- "$NAME" "${ACTIVE_PATHS[@]}" 2>/dev/null; then
+  if grep -RInF --exclude-dir='.git' -- "$NAME" "${ACTIVE_PATHS[@]}" 2>/dev/null; then
       echo "DEPRECATED_ACTIVE_NAME=FAIL:$NAME"
       FAIL=1
   else
@@ -56,13 +49,8 @@ for NAME in "${DEPRECATED[@]}"; do
   fi
 done
 
-if grep -RInE \
-  --exclude-dir='.git' \
-  --exclude='*.receipt*' \
-  --exclude='*LEGACY*' \
-  --exclude='*MIGRATION*' \
-  '(^|[^A-Za-z])Trent([^A-Za-z]|$)' \
-  "${ACTIVE_PATHS[@]}" 2>/dev/null; then
+# `Trent` is checked with word boundaries to avoid incidental substring collisions.
+if grep -RInE --exclude-dir='.git' '(^|[^A-Za-z])Trent([^A-Za-z]|$)' "${ACTIVE_PATHS[@]}" 2>/dev/null; then
     echo "DEPRECATED_ACTIVE_NAME=FAIL:Trent"
     FAIL=1
 else
