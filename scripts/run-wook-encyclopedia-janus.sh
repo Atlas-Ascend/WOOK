@@ -45,11 +45,17 @@ fi
 
 git switch -C "$BRANCH" "origin/$BRANCH"
 
+# Canonical checkout propagation law:
+# every nested WOOK controller must operate on the checkout selected above,
+# never silently jump back to ~/.ghost-atlas/games/WOOK.
+export WOOK_ROOT="$PWD"
+
 echo
- echo "======================================================================"
+echo "======================================================================"
 echo " WOOK // ENCYCLOPEDIA COMMAND TO PROOF // JANUS"
 echo "======================================================================"
 echo "REPO=$PWD"
+echo "WOOK_ROOT=$WOOK_ROOT"
 echo "BRANCH=$(git branch --show-current)"
 echo "HEAD=$(git rev-parse HEAD)"
 
