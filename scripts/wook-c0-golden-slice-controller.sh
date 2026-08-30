@@ -83,15 +83,18 @@ cmd_next() {
       echo "NEXT_ACTION=bash scripts/run-in-active-wook-root.sh scripts/implement-c0-side-quest-001.sh"
       echo "MISSION=Prove SQ-C00-001 The Missing Pashmina as a complete native quest loop" ;;
     SECRET)
-      echo "NEXT_ACTION=IMPLEMENT_VAN_SECRET_CALLBACK_ITEM" ;;
+      echo "NEXT_ACTION=bash scripts/run-in-active-wook-root.sh scripts/implement-c0-secret-001.sh"
+      echo "MISSION=Prove the van-row Ceremonial Zip Tie callback secret" ;;
     SAVE_RELOAD)
-      echo "NEXT_ACTION=RUN_C0_SAVE_RELOAD_MATRIX" ;;
+      echo "NEXT_ACTION=bash scripts/run-in-active-wook-root.sh scripts/implement-c0-save-reload-001.sh"
+      echo "MISSION=Prove native battery-backed save/check/load path" ;;
     GA_EXIT)
-      echo "NEXT_ACTION=IMPLEMENT_GA_MAIN_LANE_EXIT_GATE" ;;
+      echo "NEXT_ACTION=bash scripts/run-in-active-wook-root.sh scripts/implement-c0-ga-exit-001.sh"
+      echo "MISSION=Prove Crocs-gated chapter handoff into C01 entry seam" ;;
     NATIVE_WEB)
-      echo "NEXT_ACTION=PROVE_NATIVE_WEB_FROM_CURRENT_C0_STATE" ;;
+      echo "NEXT_ACTION=SYNC_FROM_LATEST_C0_NATIVE_BUILD" ;;
     ROM)
-      echo "NEXT_ACTION=PROVE_NATIVE_ROM_FROM_CURRENT_C0_STATE" ;;
+      echo "NEXT_ACTION=SYNC_FROM_LATEST_C0_NATIVE_BUILD" ;;
     VISUAL_QA)
       echo "NEXT_ACTION=NATIVE_SCREENSHOT_AND_PLAYTEST_QUALIFICATION" ;;
     REGRESSION)
@@ -150,6 +153,28 @@ cmd_sync() {
     echo SYNC_SIDE_QUEST=PASS
   fi
 
+  R="$ROOT/docs/proof/receipts/C0-SECRET-LATEST.json"
+  if [ -s "$R" ] && jq -e '.result=="WOOK_C0_SECRET_NATIVE_PASS"' "$R" >/dev/null 2>&1; then
+    set_gate SECRET PASS
+    echo SYNC_SECRET=PASS
+  fi
+
+  R="$ROOT/docs/proof/receipts/C0-SAVE-RELOAD-LATEST.json"
+  if [ -s "$R" ] && jq -e '.result=="WOOK_C0_SAVE_RELOAD_NATIVE_PATH_PASS"' "$R" >/dev/null 2>&1; then
+    set_gate SAVE_RELOAD PASS
+    echo SYNC_SAVE_RELOAD_NATIVE_PATH=PASS
+  fi
+
+  R="$ROOT/docs/proof/receipts/C0-GA-EXIT-LATEST.json"
+  if [ -s "$R" ] && jq -e '.result=="WOOK_C0_GA_EXIT_NATIVE_PASS"' "$R" >/dev/null 2>&1; then
+    set_gate GA_EXIT PASS
+    set_gate NATIVE_WEB PASS
+    set_gate ROM PASS
+    echo SYNC_GA_EXIT=PASS
+    echo SYNC_NATIVE_WEB=PASS
+    echo SYNC_ROM=PASS
+  fi
+
   echo "FIRST_RED_GATE=$(first_red_gate)"
 }
 
@@ -173,6 +198,14 @@ cmd_run() {
       WOOK_ROOT="$ROOT" bash scripts/run-in-active-wook-root.sh scripts/implement-c0-state-mutations-001.sh ;;
     SIDE_QUEST)
       WOOK_ROOT="$ROOT" bash scripts/run-in-active-wook-root.sh scripts/implement-c0-side-quest-001.sh ;;
+    SECRET)
+      WOOK_ROOT="$ROOT" bash scripts/run-in-active-wook-root.sh scripts/implement-c0-secret-001.sh ;;
+    SAVE_RELOAD)
+      WOOK_ROOT="$ROOT" bash scripts/run-in-active-wook-root.sh scripts/implement-c0-save-reload-001.sh ;;
+    GA_EXIT)
+      WOOK_ROOT="$ROOT" bash scripts/run-in-active-wook-root.sh scripts/implement-c0-ga-exit-001.sh ;;
+    NATIVE_WEB|ROM)
+      cmd_sync ;;
     NONE)
       echo C0_IMPLEMENTED_GATES=COMPLETE ;;
     *)
@@ -205,6 +238,9 @@ cmd_audit() {
     design/production/WOOK-C0-HUD-MENU-001.md
     design/production/WOOK-C0-STATE-MUTATIONS-001.md
     design/production/WOOK-C0-SIDE-QUEST-001.md
+    design/production/WOOK-C0-SECRET-001.md
+    design/production/WOOK-C0-SAVE-RELOAD-001.md
+    design/production/WOOK-C0-GA-EXIT-001.md
     design/production/WOOK-SDLC-COMMAND-TO-PROOF.md
     design/gameplay/WOOK-FULL-GAMEPLAY-MAP-BY-MAP.md
     design/systems/WOOK-HUD-STATE-RUNTIME-ARCHITECTURE.md
@@ -221,9 +257,18 @@ cmd_audit() {
     scripts/audit-c0-state-mutations-001.sh
     scripts/implement-c0-side-quest-001.sh
     scripts/audit-c0-side-quest-001.sh
+    scripts/implement-c0-secret-001.sh
+    scripts/audit-c0-secret-001.sh
+    scripts/implement-c0-save-reload-001.sh
+    scripts/audit-c0-save-reload-001.sh
+    scripts/implement-c0-ga-exit-001.sh
+    scripts/audit-c0-ga-exit-001.sh
     tools/build-c0-hud-menu.py
     tools/build-c0-state-mutations.py
     tools/build-c0-side-quest.py
+    tools/build-c0-secret.py
+    tools/build-c0-save-reload.py
+    tools/build-c0-ga-exit.py
   )
   echo "ACTIVE_ROOT=$ROOT"
   for f in "${required[@]}"; do
@@ -242,7 +287,13 @@ cmd_audit() {
     scripts/implement-c0-state-mutations-001.sh \
     scripts/audit-c0-state-mutations-001.sh \
     scripts/implement-c0-side-quest-001.sh \
-    scripts/audit-c0-side-quest-001.sh
+    scripts/audit-c0-side-quest-001.sh \
+    scripts/implement-c0-secret-001.sh \
+    scripts/audit-c0-secret-001.sh \
+    scripts/implement-c0-save-reload-001.sh \
+    scripts/audit-c0-save-reload-001.sh \
+    scripts/implement-c0-ga-exit-001.sh \
+    scripts/audit-c0-ga-exit-001.sh
   do
     bash -n "$s" || fail=1
     echo "SYNTAX_PASS=$s"
@@ -255,6 +306,9 @@ for name in [
     "tools/build-c0-hud-menu.py",
     "tools/build-c0-state-mutations.py",
     "tools/build-c0-side-quest.py",
+    "tools/build-c0-secret.py",
+    "tools/build-c0-save-reload.py",
+    "tools/build-c0-ga-exit.py",
 ]:
     ast.parse(Path(name).read_text(), filename=name)
     print(f"PYTHON_SYNTAX_PASS={name}")
