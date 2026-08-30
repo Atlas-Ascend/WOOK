@@ -8,9 +8,9 @@ CAMPAIGN="WOOK-ENCYCLOPEDIA-COMMAND-TO-PROOF-001"
 GA="$HOME/.ghost-atlas"
 PRIMARY="$GA/games/WOOK"
 SAFE="$GA/campaigns/$CAMPAIGN/repo"
+QUAL="$GA/campaigns/WOOK-C00-QUALIFICATION/repo"
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 
-# Prefer the safe production checkout because it owns generated C00 state.
 if [ -n "${WOOK_ROOT:-}" ] && [ -d "$WOOK_ROOT/.git" ]; then
   ROOT="$WOOK_ROOT"
 elif [ -d "$SAFE/.git" ]; then
@@ -25,6 +25,20 @@ fi
 export WOOK_ROOT="$ROOT"
 cd "$ROOT"
 
+for cmd in git jq curl sha256sum tar; do
+  command -v "$cmd" >/dev/null 2>&1 || { echo "MISSING_COMMAND=$cmd"; exit 11; }
+done
+
+# Refresh only the control plane from the canonical production branch while
+# preserving generated game/project, proof state, ROMs and web artifacts.
+git fetch origin "$BRANCH"
+for p in scripts tools design campaigns; do
+  if git cat-file -e "origin/$BRANCH:$p" 2>/dev/null; then
+    rm -rf "$ROOT/$p"
+    git archive "origin/$BRANCH" "$p" | tar -x -f -
+  fi
+done
+
 CTRL="$ROOT/scripts/wook-c0-golden-slice-controller.sh"
 PUBLISH="$ROOT/scripts/publish-c00-mvp-to-main.sh"
 REGRESS="$ROOT/scripts/run-c0-regression-001.sh"
@@ -33,10 +47,7 @@ STATE="$ROOT/docs/proof/c0-golden-slice/state.json"
 STABLE_URL="https://raw.githack.com/$OWNER/$REPO/main/site/golden/index.html"
 DIRECT_URL="https://raw.githack.com/$OWNER/$REPO/main/site/c00-mvp/index.html"
 ROM_URL="https://raw.githubusercontent.com/$OWNER/$REPO/main/releases/mvp/c00/rom/WOOK-C00-MVP.gb"
-
-for cmd in git jq curl sha256sum; do
-  command -v "$cmd" >/dev/null 2>&1 || { echo "MISSING_COMMAND=$cmd"; exit 11; }
-done
+PROOF_URL="https://raw.githubusercontent.com/$OWNER/$REPO/$BRANCH/docs/proof/chapters/C00-LATEST.json"
 
 for f in "$CTRL" "$PUBLISH" "$REGRESS"; do
   [ -s "$f" ] || { echo "MISSING_SCRIPT=$f"; exit 12; }
@@ -46,19 +57,16 @@ echo "======================================================================"
 echo " WOOK C00 // WHERE ARE MY SHOES? // FINAL COMMAND TO PROOF"
 echo "======================================================================"
 echo "ROOT=$ROOT"
-echo "HEAD=$(git rev-parse HEAD)"
+echo "SOURCE_HEAD=$(git rev-parse HEAD)"
+echo "REMOTE_CONTROL_HEAD=$(git rev-parse origin/$BRANCH)"
 echo "MISSION=MANUFACTURE_HOST_VISUALLY_ACCEPT_REGRESS_QUALIFY_PROVE"
 echo
 
-# ----------------------------------------------------------------------
 # 01 — Audit
-# ----------------------------------------------------------------------
 echo "[01/12] C00 CONTROL-PLANE AUDIT"
 WOOK_ROOT="$ROOT" bash "$CTRL" audit
 
-# ----------------------------------------------------------------------
 # 02 — Manufacture every automated gate until the human visual boundary.
-# ----------------------------------------------------------------------
 echo "[02/12] MANUFACTURE C00 TO VISUAL BOUNDARY"
 for _ in $(seq 1 64); do
   WOOK_ROOT="$ROOT" bash "$CTRL" sync >/dev/null || true
@@ -97,15 +105,11 @@ for gate in "${PRE[@]}"; do
   echo "PASS=$gate"
 done
 
-# ----------------------------------------------------------------------
-# 03 — Promote the exact generated candidate to MAIN. No rebuild here.
-# ----------------------------------------------------------------------
+# 03 — Host exact generated candidate on main.
 echo "[03/12] HOST GENERATED C00 ON MAIN"
 WOOK_ROOT="$ROOT" bash "$PUBLISH"
 
-# ----------------------------------------------------------------------
-# 04 — Prove public candidate URLs before asking for visual acceptance.
-# ----------------------------------------------------------------------
+# 04 — Public candidate proof.
 echo "[04/12] PUBLIC CANDIDATE HTTP PROOF"
 for pair in "STABLE:$STABLE_URL" "DIRECT:$DIRECT_URL" "ROM:$ROM_URL"; do
   name="${pair%%:*}"; url="${pair#*:}"
@@ -119,9 +123,7 @@ for pair in "STABLE:$STABLE_URL" "DIRECT:$DIRECT_URL" "ROM:$ROM_URL"; do
   [ "$code" = 200 ] || exit 30
 done
 
-# ----------------------------------------------------------------------
-# 05 — Open the exact hosted build on Android when possible.
-# ----------------------------------------------------------------------
+# 05 — Open hosted build and require explicit human acceptance.
 echo "[05/12] OPEN HOSTED C00"
 echo "STABLE_PLAY_URL=$STABLE_URL"
 echo "DIRECT_C00_URL=$DIRECT_URL"
@@ -140,7 +142,6 @@ echo "Verify title, Papa movement, Sniffany, Handstand Dan, raccoon, Crocs,"
 echo "HUD, menus, side quest, secret, save/load, and the GA exit."
 echo
 echo "Type exactly PASS to accept this hosted cartridge candidate."
-echo "Anything else aborts release without falsifying proof."
 printf '> '
 read -r VISUAL_VERDICT
 if [ "$VISUAL_VERDICT" != "PASS" ]; then
@@ -149,80 +150,117 @@ if [ "$VISUAL_VERDICT" != "PASS" ]; then
   exit 40
 fi
 
-# ----------------------------------------------------------------------
-# 06 — Record human visual/playtest acceptance against current artifacts.
-# ----------------------------------------------------------------------
+# 06 — Record human visual/playtest acceptance.
 echo "[06/12] RECORD HUMAN VISUAL PLAYTEST PASS"
 WOOK_ROOT="$ROOT" bash "$CTRL" visual PASS "Hosted C00 candidate reviewed on Android and accepted during final command-to-proof"
 
-# ----------------------------------------------------------------------
-# 07 — Integrated regression after human acceptance.
-# ----------------------------------------------------------------------
+# 07 — Integrated regression.
 echo "[07/12] INTEGRATED C00 REGRESSION"
 WOOK_ROOT="$ROOT" bash "$REGRESS"
 WOOK_ROOT="$ROOT" bash "$CTRL" sync
-
 red="$(WOOK_ROOT="$ROOT" bash "$CTRL" next | awk -F= '/^FIRST_RED_GATE=/{print $2; exit}')"
 echo "POST_REGRESSION_FIRST_RED=$red"
 [ "$red" = "RECEIPT" ] || { echo "REGRESSION_DID_NOT_CLOSE_C00=$red"; exit 50; }
 
-# ----------------------------------------------------------------------
-# 08 — Create canonical chapter release receipt.
-# ----------------------------------------------------------------------
+# 08 — Canonical chapter release receipt.
 echo "[08/12] C00 CHAPTER RELEASE RECEIPT"
 WOOK_ROOT="$ROOT" bash "$CTRL" receipt
 WOOK_ROOT="$ROOT" bash "$CTRL" sync
-
 result="$(jq -r '.result // ""' "$STATE")"
 [ "$result" = "QUALIFIED" ] || { echo "C00_STATE_RESULT=$result"; exit 51; }
 [ -s "$ROOT/docs/proof/chapters/C00-LATEST.json" ] || { echo "C00_RELEASE_RECEIPT=MISSING"; exit 52; }
-jq -e '.result=="WOOK_C00_RELEASE_PASS"' "$ROOT/docs/proof/chapters/C00-LATEST.json" >/dev/null || {
-  echo "C00_RELEASE_RECEIPT=FAIL"
-  exit 53
-}
+jq -e '.result=="WOOK_C00_RELEASE_PASS"' "$ROOT/docs/proof/chapters/C00-LATEST.json" >/dev/null || { echo "C00_RELEASE_RECEIPT=FAIL"; exit 53; }
 echo "WOOK_C00_RELEASE_PASS=LOCAL_PROVEN"
 
-# ----------------------------------------------------------------------
-# 09 — Commit only C00 product/proof surfaces to the production branch.
-# ----------------------------------------------------------------------
-echo "[09/12] FREEZE QUALIFIED C00 IN PRODUCTION BRANCH"
-git add \
+# 09 — Freeze into a separate CLEAN qualification checkout. This keeps dirty
+# production state from ever blocking fetch/rebase/push.
+echo "[09/12] FREEZE QUALIFIED C00 IN CLEAN PRODUCTION CHECKOUT"
+mkdir -p "$(dirname "$QUAL")"
+if [ ! -d "$QUAL/.git" ]; then
+  git clone "https://github.com/$OWNER/$REPO.git" "$QUAL"
+fi
+
+cd "$QUAL"
+git fetch origin "$BRANCH"
+git reset --hard "origin/$BRANCH"
+git clean -fd
+
+copy_tree() {
+  local rel="$1"
+  [ -e "$ROOT/$rel" ] || return 0
+  rm -rf "$QUAL/$rel"
+  mkdir -p "$(dirname "$QUAL/$rel")"
+  cp -a "$ROOT/$rel" "$QUAL/$rel"
+}
+
+for rel in \
   game/project \
   game/assets \
   docs/proof \
   releases/native \
   releases/mvp/c00 \
   site/gbstudio \
-  site/c00-mvp 2>/dev/null || true
+  site/c00-mvp; do
+  copy_tree "$rel"
+done
 
+git add game/project game/assets docs/proof releases/native releases/mvp/c00 site/gbstudio site/c00-mvp 2>/dev/null || true
 if ! git diff --cached --quiet; then
   git commit -m "release: qualify WOOK C00 Where Are My Shoes $STAMP"
 else
-  echo "QUALIFICATION_COMMIT=NO_NEW_DIFF"
-fi
-
-git fetch origin "$BRANCH"
-if ! git merge-base --is-ancestor "origin/$BRANCH" HEAD; then
-  git rebase "origin/$BRANCH"
+  echo "QUALIFICATION_BUILD_COMMIT=NO_NEW_DIFF"
 fi
 
 git push origin "HEAD:$BRANCH"
+BUILD_COMMIT="$(git rev-parse HEAD)"
+REMOTE_BUILD="$(git ls-remote origin "refs/heads/$BRANCH" | awk '{print $1}')"
+[ "$BUILD_COMMIT" = "$REMOTE_BUILD" ] || { echo "PRODUCTION_BUILD_SHA_EQUALITY=FAIL"; exit 60; }
+echo "PRODUCTION_BUILD_SHA_EQUALITY=PASS"
+
+ROM="$ROOT/releases/native/rom/WOOK.gb"
+WEB="$ROOT/site/gbstudio/index.html"
+ROM_SHA="$(sha256sum "$ROM" | awk '{print $1}')"
+WEB_SHA="$(sha256sum "$WEB" | awk '{print $1}')"
+
+mkdir -p "$QUAL/docs/proof/releases"
+FINAL_RECEIPT="$QUAL/docs/proof/releases/C00-FINAL-COMMAND-TO-PROOF-LATEST.json"
+jq -n \
+  --arg ts "$STAMP" \
+  --arg build "$BUILD_COMMIT" \
+  --arg rom "$ROM_SHA" \
+  --arg web "$WEB_SHA" \
+  --arg stable "$STABLE_URL" \
+  --arg direct "$DIRECT_URL" \
+  --arg romurl "$ROM_URL" \
+  '{
+    schema:"ghost-atlas.wook.c00.final-command-to-proof.v1",
+    chapter:"C00",
+    title:"WHERE ARE MY SHOES?",
+    timestamp:$ts,
+    qualified_build_commit:$build,
+    srl:8,
+    proof:{visual_qa:"PASS",regression:"PASS",native_web:"PASS",native_rom:"PASS",chapter_receipt:"PASS"},
+    hashes:{rom:$rom,native_web:$web},
+    urls:{stable:$stable,direct_c00:$direct,rom:$romurl},
+    result:"WOOK_C00_FINAL_COMMAND_TO_PROOF_PASS"
+  }' > "$FINAL_RECEIPT"
+
+git add "$FINAL_RECEIPT"
+git commit -m "proof: WOOK C00 final command-to-proof $STAMP"
+git push origin "HEAD:$BRANCH"
 PROD_HEAD="$(git rev-parse HEAD)"
 PROD_REMOTE="$(git ls-remote origin "refs/heads/$BRANCH" | awk '{print $1}')"
-[ "$PROD_HEAD" = "$PROD_REMOTE" ] || { echo "PRODUCTION_REMOTE_SHA_EQUALITY=FAIL"; exit 60; }
-echo "PRODUCTION_REMOTE_SHA_EQUALITY=PASS"
+[ "$PROD_HEAD" = "$PROD_REMOTE" ] || { echo "PRODUCTION_PROOF_SHA_EQUALITY=FAIL"; exit 61; }
+echo "PRODUCTION_PROOF_SHA_EQUALITY=PASS"
 
-# ----------------------------------------------------------------------
-# 10 — Republish the post-regression qualified artifact to main.
-# ----------------------------------------------------------------------
+# 10 — Republish post-regression qualified artifact to main.
 echo "[10/12] PROMOTE QUALIFIED C00 TO MAIN"
+cd "$ROOT"
 WOOK_ROOT="$ROOT" bash "$PUBLISH"
 
-# ----------------------------------------------------------------------
-# 11 — Final public proof after qualification.
-# ----------------------------------------------------------------------
-echo "[11/12] FINAL PUBLIC PROOF"
-for pair in "STABLE:$STABLE_URL" "DIRECT:$DIRECT_URL" "ROM:$ROM_URL"; do
+# 11 — Final remote/public proof.
+echo "[11/12] FINAL REMOTE PROOF"
+for pair in "STABLE:$STABLE_URL" "DIRECT:$DIRECT_URL" "ROM:$ROM_URL" "PROOF:$PROOF_URL"; do
   name="${pair%%:*}"; url="${pair#*:}"
   code="000"
   for _ in 1 2 3 4 5 6; do
@@ -234,14 +272,11 @@ for pair in "STABLE:$STABLE_URL" "DIRECT:$DIRECT_URL" "ROM:$ROM_URL"; do
   [ "$code" = 200 ] || exit 70
 done
 
-ROM="$ROOT/releases/native/rom/WOOK.gb"
-WEB="$ROOT/site/gbstudio/index.html"
-ROM_SHA="$(sha256sum "$ROM" | awk '{print $1}')"
-WEB_SHA="$(sha256sum "$WEB" | awk '{print $1}')"
+remote_result="$(curl -L -sS "$PROOF_URL" | jq -r '.result // ""')"
+[ "$remote_result" = "WOOK_C00_RELEASE_PASS" ] || { echo "REMOTE_C00_RECEIPT_RESULT=$remote_result"; exit 71; }
+echo "REMOTE_C00_RELEASE_RECEIPT=PASS"
 
-# ----------------------------------------------------------------------
-# 12 — Final command-to-proof result.
-# ----------------------------------------------------------------------
+# 12 — Final result.
 echo "[12/12] FINAL RESULT"
 echo "======================================================================"
 echo " WOOK C00 // WHERE ARE MY SHOES? // RELEASED"
@@ -251,12 +286,14 @@ echo "DIRECT_C00_URL=$DIRECT_URL"
 echo "ROM_URL=$ROM_URL"
 echo "ROM_SHA256=$ROM_SHA"
 echo "WEB_SHA256=$WEB_SHA"
-echo "PRODUCTION_HEAD=$PROD_HEAD"
+echo "QUALIFIED_BUILD_COMMIT=$BUILD_COMMIT"
+echo "FINAL_PROOF_COMMIT=$PROD_HEAD"
 echo "C00_SRL=8"
 echo "VISUAL_QA=PASS"
 echo "REGRESSION=PASS"
 echo "NATIVE_WEB=PASS"
 echo "ROM=PASS"
+echo "REMOTE_PROOF=PASS"
 echo "WOOK_C00_RELEASE_PASS"
 echo "WOOK_C00_FINAL_COMMAND_TO_PROOF_PASS"
 echo "NEXT=C01_GENERAL_ADMISSION"
