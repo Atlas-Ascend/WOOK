@@ -54,6 +54,15 @@ ensure_state() {
   done
 }
 
+set_gate() {
+  gate="$1"
+  value="$2"
+  ensure_state
+  tmp="$STATE_FILE.tmp"
+  jq --arg g "$gate" --arg v "$value" '.gates[$g]=$v' "$STATE_FILE" > "$tmp"
+  mv "$tmp" "$STATE_FILE"
+}
+
 first_red_gate() {
   ensure_state
   for gate in "${GATES[@]}"; do
@@ -85,23 +94,24 @@ cmd_next() {
   echo "FIRST_RED_GATE=$gate"
   case "$gate" in
     PAPA_WOOK_CONTROLLER)
-      echo "NEXT_ACTION=bash scripts/implement-character-golden-001.sh"
-      echo "MISSION=Bind and prove Papa Wook as the native playable hero"
+      echo "NEXT_ACTION=bash scripts/run-character-golden-001.sh"
+      echo "MISSION=Resolve runtime bridge, then bind and prove Papa Wook as native hero"
       ;;
     SNIFFANY)
-      echo "NEXT_ACTION=VERIFY_SNIFFANY_NATIVE_ACTOR_AND_DIALOGUE"
+      echo "NEXT_ACTION=bash scripts/run-character-golden-001.sh"
+      echo "MISSION=Prove Sniffany native actor and portrait dialogue from character packet"
       ;;
     HANDSTAND_DAN)
-      echo "NEXT_ACTION=IMPLEMENT_HANDSTAND_DAN_C0_ACTOR_AND_CHALLENGE"
+      echo "NEXT_ACTION=bash scripts/resolve-gbstudio-runtime.sh && bash scripts/implement-c0-handstand-dan-001.sh"
+      echo "MISSION=Materialize and prove Handstand Dan as optional C0 challenge NPC"
       ;;
     RACCOON_ENCOUNTER)
-      echo "NEXT_ACTION=VERIFY_RACCOON_NATIVE_ENCOUNTER"
+      echo "NEXT_ACTION=bash scripts/run-character-golden-001.sh"
+      echo "MISSION=Prove dedicated raccoon native encounter"
       ;;
-    CROCS_0_TO_2)
-      echo "NEXT_ACTION=IMPLEMENT_CROCS_QUEST_STATE_MACHINE"
-      ;;
-    COLLISION_TOPOLOGY)
-      echo "NEXT_ACTION=IMPLEMENT_AND_ROUTE_TEST_CAMP_COLLISION"
+    CROCS_0_TO_2|COLLISION_TOPOLOGY)
+      echo "NEXT_ACTION=bash scripts/resolve-gbstudio-runtime.sh && bash scripts/implement-c0-crocs-collision-001.sh"
+      echo "MISSION=Prove Crocs quest state machine and campground route topology"
       ;;
     HUD)
       echo "NEXT_ACTION=IMPLEMENT_EXPLORATION_HUD"
@@ -131,10 +141,10 @@ cmd_next() {
       echo "NEXT_ACTION=IMPLEMENT_GA_MAIN_LANE_EXIT_GATE"
       ;;
     NATIVE_WEB)
-      echo "NEXT_ACTION=gb-studio-cli make:web"
+      echo "NEXT_ACTION=PROVE_NATIVE_WEB_FROM_CURRENT_C0_STATE"
       ;;
     ROM)
-      echo "NEXT_ACTION=gb-studio-cli make:rom"
+      echo "NEXT_ACTION=PROVE_NATIVE_ROM_FROM_CURRENT_C0_STATE"
       ;;
     VISUAL_QA)
       echo "NEXT_ACTION=NATIVE_SCREENSHOT_AND_PLAYTEST_QUALIFICATION"
@@ -151,6 +161,66 @@ cmd_next() {
   esac
 }
 
+cmd_sync() {
+  ensure_state
+
+  CHAR_RECEIPT="$ROOT/docs/proof/receipts/CHARACTER-GOLDEN-LATEST.json"
+  if [ -s "$CHAR_RECEIPT" ] && jq -e '.result == "WOOK_CHAR_GOLDEN_NATIVE_PASS"' "$CHAR_RECEIPT" >/dev/null 2>&1; then
+    set_gate PAPA_WOOK_CONTROLLER PASS
+    set_gate SNIFFANY PASS
+    set_gate RACCOON_ENCOUNTER PASS
+    echo "SYNC_CHARACTER_PACKET=PASS"
+  fi
+
+  DAN_RECEIPT="$ROOT/docs/proof/receipts/C0-HANDSTAND-DAN-LATEST.json"
+  if [ -s "$DAN_RECEIPT" ] && jq -e '.result == "WOOK_C0_HANDSTAND_DAN_NATIVE_PASS"' "$DAN_RECEIPT" >/dev/null 2>&1; then
+    set_gate HANDSTAND_DAN PASS
+    echo "SYNC_HANDSTAND_DAN=PASS"
+  fi
+
+  CROCS_RECEIPT="$ROOT/docs/proof/receipts/C0-CROCS-COLLISION-LATEST.json"
+  if [ -s "$CROCS_RECEIPT" ] && jq -e '.result == "WOOK_C0_CROCS_COLLISION_NATIVE_PASS"' "$CROCS_RECEIPT" >/dev/null 2>&1; then
+    set_gate CROCS_0_TO_2 PASS
+    set_gate COLLISION_TOPOLOGY PASS
+    echo "SYNC_CROCS_COLLISION=PASS"
+  fi
+
+  echo "FIRST_RED_GATE=$(first_red_gate)"
+}
+
+cmd_run() {
+  cmd_sync >/dev/null
+  gate="$(first_red_gate)"
+  echo "RUN_FIRST_RED_GATE=$gate"
+
+  case "$gate" in
+    PAPA_WOOK_CONTROLLER|SNIFFANY|RACCOON_ENCOUNTER)
+      bash scripts/run-character-golden-001.sh
+      ;;
+    HANDSTAND_DAN)
+      bash scripts/resolve-gbstudio-runtime.sh
+      bash scripts/implement-c0-handstand-dan-001.sh
+      ;;
+    CROCS_0_TO_2|COLLISION_TOPOLOGY)
+      bash scripts/resolve-gbstudio-runtime.sh
+      bash scripts/implement-c0-crocs-collision-001.sh
+      ;;
+    NONE)
+      echo "C0_IMPLEMENTED_GATES=COMPLETE"
+      ;;
+    *)
+      echo "AUTOMATED_PACKET_NOT_YET_INSTANTIATED=$gate"
+      cmd_next
+      exit 60
+      ;;
+  esac
+
+  echo
+  echo "=== EVIDENCE SYNC ==="
+  cmd_sync
+  echo "NEXT=$(first_red_gate)"
+}
+
 cmd_mark() {
   gate="${1:-}"
   value="${2:-}"
@@ -164,10 +234,7 @@ cmd_mark() {
   for g in "${GATES[@]}"; do [ "$g" = "$gate" ] && valid=1; done
   [ "$valid" -eq 1 ] || { echo "UNKNOWN_GATE=$gate"; exit 4; }
 
-  ensure_state
-  tmp="$STATE_FILE.tmp"
-  jq --arg g "$gate" --arg v "$value" '.gates[$g]=$v' "$STATE_FILE" > "$tmp"
-  mv "$tmp" "$STATE_FILE"
+  set_gate "$gate" "$value"
   echo "$gate=$value"
   echo "FIRST_RED_GATE=$(first_red_gate)"
 }
@@ -181,18 +248,28 @@ cmd_audit() {
     design/gameplay/WOOK-FULL-GAMEPLAY-MAP-BY-MAP.md
     design/systems/WOOK-HUD-STATE-RUNTIME-ARCHITECTURE.md
     design/qa/WOOK-AEROSPACE-GRADE-VERIFICATION-MATRIX.md
+    scripts/resolve-gbstudio-runtime.sh
+    scripts/run-character-golden-001.sh
+    scripts/implement-character-golden-001.sh
+    scripts/implement-c0-handstand-dan-001.sh
+    scripts/implement-c0-crocs-collision-001.sh
   )
   for f in "${required[@]}"; do
     if [ -s "$f" ]; then echo "PASS $f"; else echo "FAIL $f"; fail=1; fi
   done
 
-  if [ -s scripts/implement-character-golden-001.sh ]; then
-    bash -n scripts/implement-character-golden-001.sh || fail=1
-    echo "CHARACTER_PACKET_PRESENT=PASS"
-  else
-    echo "CHARACTER_PACKET_PRESENT=FAIL"
-    fail=1
-  fi
+  for s in \
+    scripts/resolve-gbstudio-runtime.sh \
+    scripts/run-character-golden-001.sh \
+    scripts/implement-character-golden-001.sh \
+    scripts/implement-c0-handstand-dan-001.sh \
+    scripts/implement-c0-crocs-collision-001.sh
+  do
+    if [ -s "$s" ]; then
+      bash -n "$s" || fail=1
+      echo "SYNTAX_PASS=$s"
+    fi
+  done
 
   if [ "$fail" -ne 0 ]; then
     echo "C0_GOLDEN_SLICE_AUDIT=FAIL"
@@ -220,8 +297,10 @@ cmd_receipt() {
 case "${1:-status}" in
   status) cmd_status ;;
   next) cmd_next ;;
+  sync) cmd_sync ;;
+  run) cmd_run ;;
   mark) cmd_mark "${2:-}" "${3:-}" ;;
   audit) cmd_audit ;;
   receipt) cmd_receipt ;;
-  *) echo "usage: $0 {status|next|audit|mark GATE VALUE|receipt}"; exit 2 ;;
+  *) echo "usage: $0 {status|next|sync|run|audit|mark GATE VALUE|receipt}"; exit 2 ;;
 esac
