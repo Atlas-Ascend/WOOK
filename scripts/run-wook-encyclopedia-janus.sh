@@ -109,8 +109,12 @@ case "${1:-status}" in
       exit "$rc"
     done
     ;;
+  mvp)
+    echo "MODE=C00_COMMAND_TO_PROOF_ROM_MVP"
+    WOOK_ROOT="$PWD" bash scripts/wook-c00-mvp-command-to-proof.sh
+    ;;
   *)
-    echo "usage: $0 {status|run|autopilot}"
+    echo "usage: $0 {status|run|autopilot|mvp}"
     exit 2
     ;;
 esac
