@@ -1,14 +1,21 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -Eeuo pipefail
 
-ROOT="${WOOK_ROOT:-$HOME/.ghost-atlas/games/WOOK}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="${WOOK_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+export WOOK_ROOT="$ROOT"
 CAMPAIGN="$ROOT/campaigns/WOOK-ENCYCLOPEDIA-COMMAND-TO-PROOF-001/campaign.json"
 OUT="$ROOT/docs/proof/whole-game/work-packets"
 mkdir -p "$OUT"
 cd "$ROOT"
 
 command -v jq >/dev/null 2>&1 || { echo "JQ=MISSING"; exit 20; }
-test -s "$CAMPAIGN" || { echo "CAMPAIGN=MISSING"; exit 21; }
+test -s "$CAMPAIGN" || {
+  echo "CAMPAIGN=MISSING"
+  echo "EXPECTED=$CAMPAIGN"
+  echo "ACTIVE_ROOT=$ROOT"
+  exit 21
+}
 
 valid_chapter() {
   jq -e --arg c "$1" '.chapters[]|select(.id==$c)' "$CAMPAIGN" >/dev/null 2>&1
@@ -34,6 +41,7 @@ prepare() {
       readiness_target:"SRL-8 minimum before chapter qualification",
       truth:"PREPARED_NOT_IMPLEMENTED_UNLESS_NATIVE_EVIDENCE_EXISTS"
     }' "$CAMPAIGN" > "$out"
+  echo "ACTIVE_ROOT=$ROOT"
   echo "WORK_PACKET=$out"
   jq . "$out"
 }
@@ -50,6 +58,7 @@ audit() {
   jq -e '.schema=="ghost-atlas.wook.chapter.work-packet.v1" and (.gates|length)==16 and (.required_roles|length)>=13' "$f" >/dev/null || { echo "WORK_PACKET_INVALID"; exit 41; }
   echo "CHAPTER_WORK_PACKET_AUDIT=PASS"
   echo "CHAPTER=$cid"
+  echo "ACTIVE_ROOT=$ROOT"
 }
 
 case "${1:-}" in
