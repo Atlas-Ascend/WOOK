@@ -1,0 +1,54 @@
+{
+  "_resourceType": "actor",
+  "id": "a401bba1-1e10-4a44-9001-000000001001",
+  "name": "Moonbeam Jessica",
+  "frame": 0,
+  "animate": false,
+  "spriteSheetId": "a401bba1-1e10-4a44-9001-000000000002",
+  "prefabId": "",
+  "direction": "down",
+  "moveSpeed": 1,
+  "animSpeed": 15,
+  "paletteId": "",
+  "isPinned": false,
+  "persistent": false,
+  "collisionGroup": "",
+  "collisionExtraFlags": [],
+  "prefabScriptOverrides": {},
+  "_index": 0,
+  "symbol": "actor_moonbeam_jessica",
+  "coordinateType": "tiles",
+  "x": 14,
+  "y": 6,
+  "script": [
+    {
+      "id": "6587751e-8874-5e4b-b30d-84f456433298",
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": "MOONBEAM JESSICA\nOh my god.\nYou finally woke up.",
+        "avatarId": "a401bba1-1e10-4a44-9001-000000000102"
+      }
+    },
+    {
+      "id": "2e06c060-68d6-5452-9a26-bea5feb48a3a",
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": "PAPA WOOK\nWhere are my Crocs?",
+        "avatarId": "a401bba1-1e10-4a44-9001-000000000101"
+      }
+    },
+    {
+      "id": "e93220da-b08b-58cc-8e4d-da9d381ed57c",
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": "Start with the tents.\nThen maybe ask\nthe raccoon.",
+        "avatarId": "a401bba1-1e10-4a44-9001-000000000102"
+      }
+    }
+  ],
+  "startScript": [],
+  "updateScript": [],
+  "hit1Script": [],
+  "hit2Script": [],
+  "hit3Script": []
+}

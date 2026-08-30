@@ -1,0 +1,26 @@
+{
+  "schema": "ghost-atlas.wook.character-golden.v1",
+  "packet": "WOOK-CHAR-GOLDEN-001",
+  "player": {
+    "sprite": "a401bba1-1e10-4a44-9001-000000000001",
+    "avatar": "a401bba1-1e10-4a44-9001-000000000101"
+  },
+  "actors": {
+    "moonbeam_jessica": {
+      "actor": "a401bba1-1e10-4a44-9001-000000001001",
+      "sprite": "a401bba1-1e10-4a44-9001-000000000002",
+      "avatar": "a401bba1-1e10-4a44-9001-000000000102"
+    },
+    "raccoon": {
+      "actor": "a401bba1-1e10-4a44-9001-000000001002",
+      "sprite": "a401bba1-1e10-4a44-9001-000000000003",
+      "avatar": "a401bba1-1e10-4a44-9001-000000000103"
+    }
+  },
+  "requirements": {
+    "player_visible": true,
+    "intro_paginated": true,
+    "jessica_interactive": true,
+    "raccoon_menu": true
+  }
+}

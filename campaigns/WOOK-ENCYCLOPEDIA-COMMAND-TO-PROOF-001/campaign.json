@@ -1,0 +1,50 @@
+{
+  "schema": "ghost-atlas.wook.encyclopedia.command-to-proof.v1",
+  "campaign": "WOOK-ENCYCLOPEDIA-COMMAND-TO-PROOF-001",
+  "production_target": "commercial cartridge-class adventure",
+  "final_result": "WOOK_CARTRIDGE_CLASS_RELEASE_PASS",
+  "roles": [
+    {"id":"R01","name":"Executive Producer / Canon Keeper"},
+    {"id":"R02","name":"Game Director"},
+    {"id":"R03","name":"Narrative Director"},
+    {"id":"R04","name":"Systems Architect"},
+    {"id":"R05","name":"World / Level Director"},
+    {"id":"R06","name":"Dungeon Designer"},
+    {"id":"R07","name":"Character Director"},
+    {"id":"R08","name":"Pixel Art Director"},
+    {"id":"R09","name":"Animation Director"},
+    {"id":"R10","name":"UI / HUD Director"},
+    {"id":"R11","name":"Audio Director"},
+    {"id":"R12","name":"Gameplay Engineer"},
+    {"id":"R13","name":"GB Studio Integration Engineer"},
+    {"id":"R14","name":"State / Save Engineer"},
+    {"id":"R15","name":"Build / Release Engineer"},
+    {"id":"R16","name":"QA / Test Engineer"},
+    {"id":"R17","name":"Failure / Recovery Engineer"},
+    {"id":"R18","name":"Performance / Cartridge Engineer"},
+    {"id":"R19","name":"Proof / Configuration Manager"}
+  ],
+  "readiness": {
+    "SRL0":"IDEA","SRL1":"REQUIREMENT","SRL2":"ARCHITECTURE","SRL3":"NATIVE_RESOURCE","SRL4":"COMPILES","SRL5":"FUNCTIONAL","SRL6":"FAILURE_TESTED","SRL7":"PRESENTATION_QUALIFIED","SRL8":"REGRESSION_QUALIFIED","SRL9":"RELEASE_PROVEN"
+  },
+  "default_gates": ["REQUIREMENTS","MAP_TOPOLOGY","CHARACTERS","CRITICAL_PATH","QUESTS","OPTIONAL_CONTENT","STATE","HUD_UI","AUDIO","SAVE_RELOAD","FAILURE_RECOVERY","NATIVE_WEB","ROM","VISUAL_QA","REGRESSION","RECEIPT"],
+  "chapters": [
+    {"id":"C00","title":"WHERE ARE MY SHOES?","maps":["Questionable Campground"],"mission":"Find both Crocs, prove the complete Golden Campground grammar, and leave for GA Main Lane."},
+    {"id":"C01","title":"GENERAL ADMISSION","maps":["GA Main Lane","The Long Walk"],"mission":"Prepare camp and travel toward the venue while establishing persistent home-base and social systems."},
+    {"id":"C02","title":"THROUGH THE GATES","maps":["Venue Security","First Reveal Overlook"],"mission":"Cross the threshold and deliver the first full festival reveal."},
+    {"id":"C03","title":"LIT FAMILY REUNION — DAY ONE","maps":["Festival Concourse","Main Stage Day","Art Grove","Side Stage Route"],"mission":"Deliver the first complete festival day with schedule choices, spectacle, trade, exploration and music gameplay."},
+    {"id":"C04","title":"AFTER THE SHOW","maps":["Venue Exodus","GA After Dark"],"mission":"Transform familiar geography into the nocturnal side-quest world and begin reality drift."},
+    {"id":"C05","title":"ALTERNATE REALITY","maps":["Looping Camp Lane","Porta-Potty Labyrinth","Impossible Shortcut"],"mission":"Prove deterministic surrealism and complete the first full dungeon."},
+    {"id":"C06","title":"4:00 AM","maps":["Silent Camp Return"],"mission":"Create the quiet still point and exact checkpoint before the Ordeal."},
+    {"id":"C07","title":"THE ORDEAL","maps":["Dawn Disruption","Search Grid","Resolution"],"mission":"Pay off the whole learned systems stack in a consequential multi-route crisis."},
+    {"id":"C08","title":"DAY TWO — MASTERY","maps":["Morning Reset","Venue Day Two","Totem Forest"],"mission":"Let the player live as a more competent Papa and complete the navigation-mastery dungeon."},
+    {"id":"C09","title":"NIGHT TWO","maps":["Secret Set","Campfire Constellation"],"mission":"Pay off social/exploration history through deeper music and community content."},
+    {"id":"C10","title":"FINAL FESTIVAL DAY","maps":["Last Morning","Final Day Venue"],"mission":"Close optional loops and prepare the temporary world for ending."},
+    {"id":"C11","title":"THE LAST NIGHT","maps":["Final Main-Stage Approach","Final Set"],"mission":"Converge callbacks and prove Papa's transformation through behavior and spectacle."},
+    {"id":"C12","title":"PACK DOWN / GOODBYES","maps":["Emptying GA"],"mission":"Make the temporary city visibly disappear and close relationship/community state."},
+    {"id":"C13","title":"THE ROAD HOME","maps":["Parking Exit","Highway","Roadside Stop"],"mission":"Begin the road back and allow reality to bend again."},
+    {"id":"C14","title":"COSMIC JOURNEY","maps":["Astral Highway","Memory Constellation","Threshold Home"],"mission":"Integrate whole-game state through the final symbolic dungeon."},
+    {"id":"C15","title":"OH.","maps":["Home"],"mission":"Return to ordinary life and answer the whole journey with OH."}
+  ],
+  "whole_game_gates": ["ALL_CHAPTERS_SRL8_PLUS","WHOLE_GAME_SAVE_LOAD","WHOLE_GAME_ROUTE_REGRESSION","WHOLE_GAME_STATE_REGRESSION","WHOLE_GAME_PRESENTATION","BUILD_REPRODUCIBILITY","NATIVE_WEB_HASH","ROM_HASH","RELEASE_COMMIT","PUBLICATION_PROOF","FINAL_RECEIPT"]
+}

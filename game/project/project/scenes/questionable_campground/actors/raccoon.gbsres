@@ -1,0 +1,61 @@
+{
+  "_resourceType": "actor",
+  "id": "a401bba1-1e10-4a44-9001-000000001002",
+  "name": "Raccoon",
+  "frame": 0,
+  "animate": false,
+  "spriteSheetId": "a401bba1-1e10-4a44-9001-000000000003",
+  "prefabId": "",
+  "direction": "down",
+  "moveSpeed": 1,
+  "animSpeed": 15,
+  "paletteId": "",
+  "isPinned": false,
+  "persistent": false,
+  "collisionGroup": "",
+  "collisionExtraFlags": [],
+  "prefabScriptOverrides": {},
+  "_index": 1,
+  "symbol": "actor_raccoon",
+  "coordinateType": "tiles",
+  "x": 5,
+  "y": 12,
+  "script": [
+    {
+      "id": "6e718f58-3afb-52c3-b071-6f8136fcf698",
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": "RACCOON\nAPPROACHES!",
+        "avatarId": "a401bba1-1e10-4a44-9001-000000000103"
+      }
+    },
+    {
+      "id": "ed80d7f3-ff95-502d-aca1-4b26a5889c95",
+      "command": "EVENT_MENU",
+      "args": {
+        "variable": "T0",
+        "items": 4,
+        "option1": "Offer snack",
+        "option2": "Intimidate",
+        "option3": "Discuss boundaries",
+        "option4": "Accept loss",
+        "cancelOnLastOption": false,
+        "cancelOnB": true,
+        "layout": "menu"
+      }
+    },
+    {
+      "id": "83fc5212-1819-541d-b847-0d22a9f0ed7a",
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": "The raccoon studies\nyour decision.\nNo refunds.",
+        "avatarId": "a401bba1-1e10-4a44-9001-000000000103"
+      }
+    }
+  ],
+  "startScript": [],
+  "updateScript": [],
+  "hit1Script": [],
+  "hit2Script": [],
+  "hit3Script": []
+}

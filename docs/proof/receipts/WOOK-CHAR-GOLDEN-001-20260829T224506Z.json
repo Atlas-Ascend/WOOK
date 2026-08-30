@@ -1,0 +1,24 @@
+{
+  "schema": "ghost-atlas.wook.character-golden-proof.v1",
+  "packet": "WOOK-CHAR-GOLDEN-001",
+  "timestamp": "20260829T224506Z",
+  "proof": {
+    "existing_factory_reused": "PASS",
+    "papa_player_binding": "PASS",
+    "jessica_actor": "PASS",
+    "raccoon_actor": "PASS",
+    "portrait_resources": "PASS",
+    "paginated_dialogue": "PASS",
+    "native_web": "PASS",
+    "native_rom": "PASS"
+  },
+  "hashes": {
+    "rom": "2b1ec8e141f54879d78064c2672c08229d2d903a496312dde280e30a0577631b",
+    "native_web": "7b8d7fde1acbf808ebda30a9ce8104e77e9e9650d78c0ca17e41035f1cd0cd6f",
+    "papa": "160bc961b6d4e85d3c63ac56c16add5d7ce65e43994d8603aa02775f61fd5dac",
+    "jessica": "8d714fa56b3e2b27ef614074202dbe600e74f03ff774b6e9e5c2ff8b57c7b0ab",
+    "raccoon": "127018c603628671a426e14d98c2d0c6ce94cc422e979336db2866abbdd7ac88"
+  },
+  "visual_qa": "PENDING_SCREENSHOT_REVIEW",
+  "result": "WOOK_CHAR_GOLDEN_NATIVE_PASS"
+}

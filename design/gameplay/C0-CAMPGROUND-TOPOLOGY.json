@@ -1,0 +1,49 @@
+{
+  "schema": "ghost-atlas.wook.c0.campground-topology.v1",
+  "packet": "WOOK-C0-CROCS-COLLISION-001",
+  "scene": "The Questionable Campground",
+  "width": 20,
+  "height": 18,
+  "collision": {
+    "empty": 0,
+    "solid": 15,
+    "solid_semantics": "four-direction blocking mask",
+    "obstacles": [
+      {"name":"north_border","rect":[0,0,19,0]},
+      {"name":"south_border_except_exit","rect":[0,17,8,17]},
+      {"name":"south_border_right","rect":[12,17,19,17]},
+      {"name":"west_border","rect":[0,0,0,17]},
+      {"name":"east_border","rect":[19,0,19,17]},
+      {"name":"van","rect":[1,2,5,5]},
+      {"name":"north_tent","rect":[14,3,17,5]},
+      {"name":"west_sign","rect":[2,8,4,9]},
+      {"name":"campfire","rect":[9,7,10,8]},
+      {"name":"altar_cooler_cluster","rect":[15,9,17,10]}
+    ]
+  },
+  "nodes": {
+    "spawn": [10,14],
+    "sniffany": [14,6],
+    "croc_left": [7,13],
+    "raccoon": [5,12],
+    "croc_right": [6,12],
+    "handstand_dan": [10,11],
+    "ga_exit": [10,17]
+  },
+  "required_routes": [
+    ["spawn","sniffany"],
+    ["spawn","croc_left"],
+    ["croc_left","raccoon"],
+    ["raccoon","croc_right"],
+    ["croc_right","ga_exit"],
+    ["spawn","handstand_dan"],
+    ["handstand_dan","ga_exit"]
+  ],
+  "laws": [
+    "all critical nodes must be walkable",
+    "all required routes must be connected by four-neighbor movement",
+    "Handstand Dan remains optional",
+    "GA exit is geometrically reachable but progression-gated by Crocs and venue-ready state",
+    "collision topology may evolve with final art but route invariants must remain green"
+  ]
+}

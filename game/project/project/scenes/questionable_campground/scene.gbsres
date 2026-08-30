@@ -1,49 +1,56 @@
 {
   "_resourceType": "scene",
-
   "id": "56a8f9bb-34d2-46f6-b818-713af683e38e",
-
   "_index": 1,
-
   "type": "TOPDOWN",
-
   "name": "The Questionable Campground",
-
   "symbol": "scene_questionable_campground",
-
   "x": 240,
   "y": 0,
-
   "width": 20,
   "height": 18,
-
   "backgroundId": "6c4e1201-2808-482f-bc58-1f6fb844a78d",
-
   "tilesetId": "",
-
   "colorModeOverride": "none",
-
   "paletteIds": [],
   "spritePaletteIds": [],
-
   "autoFadeSpeed": 1,
-
   "script": [
-
     {
-      "id": "7fd62851-e674-4894-ace4-000000000001",
-      "command": "EVENT_TEXT",
-
+      "id": "4ab8e1d2-1f94-524e-b1a7-60e03174d0bf",
+      "command": "EVENT_ACTOR_SET_SPRITE",
       "args": {
-        "text": "You wake up.\nYour Crocs are gone.\nYour phone is at 17%.\nSomehow, this is everyone else's fault."
+        "actorId": "player",
+        "spriteSheetId": "a401bba1-1e10-4a44-9001-000000000001"
+      }
+    },
+    {
+      "id": "3e23106e-4f21-5e47-bbe2-b87f529772f1",
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": "You wake up.\nYour Crocs are gone.",
+        "avatarId": "a401bba1-1e10-4a44-9001-000000000101"
+      }
+    },
+    {
+      "id": "001cbaef-6589-5d2c-948b-b98badb0fea8",
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": "Phone: 17%.\nFantastic.",
+        "avatarId": "a401bba1-1e10-4a44-9001-000000000101"
+      }
+    },
+    {
+      "id": "0484b4d4-b243-526b-bd60-2588a6bc04f0",
+      "command": "EVENT_TEXT",
+      "args": {
+        "text": "Somehow,\nthis is everyone\nelse's fault.",
+        "avatarId": "a401bba1-1e10-4a44-9001-000000000101"
       }
     }
-
   ],
-
   "playerHit1Script": [],
   "playerHit2Script": [],
   "playerHit3Script": [],
-
   "collisions": ""
 }

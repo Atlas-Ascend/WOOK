@@ -1,0 +1,105 @@
+schema: ghost-atlas.wook.c0-golden-slice.v1
+packet: WOOK-C0-GOLDEN-SLICE-001
+phase: C0_WHERE_ARE_MY_SHOES
+engine: GB Studio 4.3.2
+baseline: native-v4-proven
+mission: Qualify the complete Golden Campground gameplay slice
+
+laws:
+  - first_red_gate_only
+  - no_proven_factory_rebuild_without_failed_diagnostic
+  - no_asset_presence_counts_as_implementation
+  - no_compile_only_pass
+  - no_visual_only_pass
+  - save_reload_required
+  - receipt_required
+
+critical_path:
+  - title
+  - questionable_campground
+  - papa_wook_control
+  - sniffany
+  - crocs_quest
+  - croc_left_or_first
+  - raccoon_encounter
+  - croc_second
+  - quest_complete
+  - ga_exit
+
+gates:
+  - PAPA_WOOK_CONTROLLER
+  - SNIFFANY
+  - HANDSTAND_DAN
+  - RACCOON_ENCOUNTER
+  - CROCS_0_TO_2
+  - COLLISION_TOPOLOGY
+  - HUD
+  - PHONE
+  - INVENTORY
+  - QUEST_LOG
+  - GROUNDSCORE
+  - RESPONSIBILITY
+  - WOOK_KARMA
+  - SIDE_QUEST
+  - SECRET
+  - SAVE_RELOAD
+  - GA_EXIT
+  - NATIVE_WEB
+  - ROM
+  - VISUAL_QA
+  - REGRESSION
+  - RECEIPT
+
+state:
+  player:
+    - battery
+    - vibes
+    - responsibility
+    - wook_karma
+  inventory:
+    - croc_left
+    - croc_right
+    - phone
+    - lighter
+    - water
+    - strange_items
+  characters:
+    - sniffany_met
+    - sniffany_quest_stage
+    - handstand_dan_met
+    - handstand_dan_challenge
+    - raccoon_resolution
+  world:
+    - crocs_count
+    - venue_ready
+    - secret_van_item
+    - ga_exit_unlocked
+
+required_characters:
+  - papa_wook
+  - sniffany
+  - handstand_dan
+  - raccoon
+
+required_world_nodes:
+  - papa_tent
+  - campfire
+  - van_row
+  - cooler_zone
+  - altar_zone
+  - raccoon_route
+  - ga_exit
+
+save_contract:
+  - same_quest_state
+  - same_inventory
+  - same_character_flags
+  - same_world_phase
+  - no_duplicate_rewards
+  - no_actor_ghosting
+  - valid_spawn
+
+release:
+  minimum_srl: 8
+  success_result: C0_WHERE_ARE_MY_SHOES_QUALIFIED
+  next_phase: C1_GENERAL_ADMISSION
