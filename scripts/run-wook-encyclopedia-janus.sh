@@ -37,17 +37,27 @@ fi
 cd "$TARGET"
 git fetch origin "$BRANCH"
 
+# A production checkout is expected to accumulate generated project resources,
+# receipts, proof state and native artifacts. Preserve those without preventing
+# the script/control-plane files from being refreshed from origin.
 if [ -n "$(git status --porcelain)" ]; then
   echo "TARGET_DIRTY=YES"
-  echo "REFUSING_TO_OVERWRITE_LOCAL_WORK=PASS"
-  exit 40
+  echo "GENERATED_PRODUCTION_STATE=PRESERVE"
+  echo "CONTROL_PLANE_REFRESH=WORKTREE_OVERLAY"
+
+  refresh_paths=(scripts tools design campaigns)
+  for p in "${refresh_paths[@]}"; do
+    if git cat-file -e "origin/$BRANCH:$p" 2>/dev/null; then
+      rm -rf "$p"
+      git archive "origin/$BRANCH" "$p" | tar -x -f -
+    fi
+  done
+else
+  git switch -C "$BRANCH" "origin/$BRANCH"
 fi
 
-git switch -C "$BRANCH" "origin/$BRANCH"
-
-# Canonical checkout propagation law:
-# every nested WOOK controller must operate on the checkout selected above,
-# never silently jump back to ~/.ghost-atlas/games/WOOK.
+# Canonical checkout propagation law: every nested controller operates on the
+# selected checkout and never silently jumps back to the primary dirty tree.
 export WOOK_ROOT="$PWD"
 
 echo
@@ -57,7 +67,8 @@ echo "======================================================================"
 echo "REPO=$PWD"
 echo "WOOK_ROOT=$WOOK_ROOT"
 echo "BRANCH=$(git branch --show-current)"
-echo "HEAD=$(git rev-parse HEAD)"
+echo "REMOTE_HEAD=$(git rev-parse origin/$BRANCH)"
+echo "LOCAL_HEAD=$(git rev-parse HEAD)"
 
 echo
 bash scripts/wook-encyclopedia-controller.sh audit
@@ -77,9 +88,6 @@ case "${1:-status}" in
     ;;
   autopilot)
     echo "MODE=AUTOPILOT_FIRST_RED_GATE"
-    # Repeat only while concrete packets complete successfully. The controller
-    # exits 60 when it reaches architecture that lacks a native implementation
-    # packet; that is the intentional truth boundary.
     while true; do
       set +e
       bash scripts/wook-encyclopedia-controller.sh run
@@ -92,7 +100,7 @@ case "${1:-status}" in
         continue
       fi
       if [ "$rc" -eq 60 ]; then
-        echo "AUTOPILOT=PAUSED_AT_NATIVE_IMPLEMENTATION_BOUNDARY"
+        echo "AUTOPILOT=PAUSED_AT_FIRST_MANUAL_OR_IMPLEMENTATION_BOUNDARY"
         bash scripts/wook-encyclopedia-controller.sh next
         break
       fi
