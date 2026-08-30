@@ -1,26 +1,31 @@
 <!doctype html>
-<html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>WOOK — Press Start, Probably.</title>
-<link rel="stylesheet" href="style.css"></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta http-equiv="refresh" content="0;url=../gbstudio/index.html">
+  <title>WOOK — Native Cartridge</title>
+  <link rel="canonical" href="../gbstudio/index.html">
+  <style>
+    html,body{margin:0;min-height:100%;background:#071b20;color:#d8e9b0;font-family:monospace}
+    body{display:grid;place-items:center;min-height:100vh;text-align:center;padding:24px;box-sizing:border-box}
+    a{color:#d8e9b0;font-weight:700}
+  </style>
+  <script>
+    (function(){
+      var target = new URL('../gbstudio/index.html', window.location.href);
+      target.search = window.location.search;
+      target.hash = window.location.hash;
+      window.location.replace(target.href);
+    })();
+  </script>
+</head>
 <body>
-<main class="cabinet">
-  <div class="brand"><b>WOOK</b><span>PRESS START, PROBABLY.</span></div>
-  <div class="bezel"><canvas id="screen" width="160" height="144" aria-label="WOOK game"></canvas></div>
-  <div class="controls">
-    <div class="dpad">
-      <button data-key="up">▲</button>
-      <button data-key="left">◀</button><span></span><button data-key="right">▶</button>
-      <button data-key="down">▼</button>
-    </div>
-    <div class="action">
-      <button data-key="a" class="round">A</button>
-      <button data-key="b" class="round">B</button>
-      <button data-key="start">START</button>
-      <button data-key="phone">PHONE</button>
-    </div>
-  </div>
-  <div class="footer">GROUND SCORE ECONOMY ACTIVE · STAY HYDRATED · STAY GROUNDED.</div>
-</main>
-<script src="app.js"></script>
-</body></html>
+  <main>
+    <h1>WOOK</h1>
+    <p>PRESS START, PROBABLY.</p>
+    <p>Loading the native GB Studio cartridge…</p>
+    <p><a href="../gbstudio/index.html">Enter WOOK</a></p>
+  </main>
+</body>
+</html>
