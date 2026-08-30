@@ -36,15 +36,8 @@ GATES=(
 
 ensure_state() {
   if [ ! -s "$STATE_FILE" ]; then
-    jq -n --arg packet "$PACKET" '{
-      schema:"ghost-atlas.wook.c0-golden-slice.state.v1",
-      packet:$packet,
-      phase:"C0_WHERE_ARE_MY_SHOES",
-      gates:{},
-      result:"PENDING"
-    }' > "$STATE_FILE"
+    jq -n --arg packet "$PACKET" '{schema:"ghost-atlas.wook.c0-golden-slice.state.v1",packet:$packet,phase:"C0_WHERE_ARE_MY_SHOES",gates:{},result:"PENDING"}' > "$STATE_FILE"
   fi
-
   for gate in "${GATES[@]}"; do
     if ! jq -e --arg g "$gate" '.gates[$g] != null' "$STATE_FILE" >/dev/null 2>&1; then
       tmp="$STATE_FILE.tmp"
@@ -55,9 +48,7 @@ ensure_state() {
 }
 
 set_gate() {
-  gate="$1"
-  value="$2"
-  ensure_state
+  gate="$1"; value="$2"; ensure_state
   tmp="$STATE_FILE.tmp"
   jq --arg g "$gate" --arg v "$value" '.gates[$g]=$v' "$STATE_FILE" > "$tmp"
   mv "$tmp" "$STATE_FILE"
@@ -67,10 +58,7 @@ first_red_gate() {
   ensure_state
   for gate in "${GATES[@]}"; do
     value="$(jq -r --arg g "$gate" '.gates[$g]' "$STATE_FILE")"
-    if [ "$value" != "PASS" ]; then
-      echo "$gate"
-      return 0
-    fi
+    if [ "$value" != "PASS" ]; then echo "$gate"; return 0; fi
   done
   echo "NONE"
 }
@@ -93,37 +81,21 @@ cmd_next() {
   echo "PHASE=C0_WHERE_ARE_MY_SHOES"
   echo "FIRST_RED_GATE=$gate"
   case "$gate" in
-    PAPA_WOOK_CONTROLLER)
+    PAPA_WOOK_CONTROLLER|SNIFFANY|RACCOON_ENCOUNTER)
       echo "NEXT_ACTION=bash scripts/run-character-golden-001.sh"
-      echo "MISSION=Resolve runtime bridge, then bind and prove Papa Wook as native hero"
-      ;;
-    SNIFFANY)
-      echo "NEXT_ACTION=bash scripts/run-character-golden-001.sh"
-      echo "MISSION=Prove Sniffany native actor and portrait dialogue from character packet"
+      echo "MISSION=Resolve runtime bridge and prove Papa Wook, Sniffany, and raccoon native character layer"
       ;;
     HANDSTAND_DAN)
       echo "NEXT_ACTION=bash scripts/resolve-gbstudio-runtime.sh && bash scripts/implement-c0-handstand-dan-001.sh"
       echo "MISSION=Materialize and prove Handstand Dan as optional C0 challenge NPC"
       ;;
-    RACCOON_ENCOUNTER)
-      echo "NEXT_ACTION=bash scripts/run-character-golden-001.sh"
-      echo "MISSION=Prove dedicated raccoon native encounter"
-      ;;
     CROCS_0_TO_2|COLLISION_TOPOLOGY)
       echo "NEXT_ACTION=bash scripts/resolve-gbstudio-runtime.sh && bash scripts/implement-c0-crocs-collision-001.sh"
       echo "MISSION=Prove Crocs quest state machine and campground route topology"
       ;;
-    HUD)
-      echo "NEXT_ACTION=IMPLEMENT_EXPLORATION_HUD"
-      ;;
-    PHONE)
-      echo "NEXT_ACTION=IMPLEMENT_PHONE_RUNTIME"
-      ;;
-    INVENTORY)
-      echo "NEXT_ACTION=IMPLEMENT_INVENTORY_RUNTIME"
-      ;;
-    QUEST_LOG)
-      echo "NEXT_ACTION=IMPLEMENT_QUEST_LOG_RUNTIME"
+    HUD|PHONE|INVENTORY|QUEST_LOG)
+      echo "NEXT_ACTION=bash scripts/implement-c0-hud-menu-001.sh"
+      echo "MISSION=Instantiate native exploration HUD plus Start/Select Phone Inventory Quest interface runtime"
       ;;
     GROUNDSCORE|RESPONSIBILITY|WOOK_KARMA)
       echo "NEXT_ACTION=IMPLEMENT_C0_STATE_MUTATIONS"
@@ -185,6 +157,15 @@ cmd_sync() {
     echo "SYNC_CROCS_COLLISION=PASS"
   fi
 
+  UI_RECEIPT="$ROOT/docs/proof/receipts/C0-HUD-MENU-LATEST.json"
+  if [ -s "$UI_RECEIPT" ] && jq -e '.result == "WOOK_C0_HUD_MENU_NATIVE_PASS"' "$UI_RECEIPT" >/dev/null 2>&1; then
+    set_gate HUD PASS
+    set_gate PHONE PASS
+    set_gate INVENTORY PASS
+    set_gate QUEST_LOG PASS
+    echo "SYNC_HUD_MENU=PASS"
+  fi
+
   echo "FIRST_RED_GATE=$(first_red_gate)"
 }
 
@@ -192,7 +173,6 @@ cmd_run() {
   cmd_sync >/dev/null
   gate="$(first_red_gate)"
   echo "RUN_FIRST_RED_GATE=$gate"
-
   case "$gate" in
     PAPA_WOOK_CONTROLLER|SNIFFANY|RACCOON_ENCOUNTER)
       bash scripts/run-character-golden-001.sh
@@ -205,6 +185,9 @@ cmd_run() {
       bash scripts/resolve-gbstudio-runtime.sh
       bash scripts/implement-c0-crocs-collision-001.sh
       ;;
+    HUD|PHONE|INVENTORY|QUEST_LOG)
+      bash scripts/implement-c0-hud-menu-001.sh
+      ;;
     NONE)
       echo "C0_IMPLEMENTED_GATES=COMPLETE"
       ;;
@@ -214,7 +197,6 @@ cmd_run() {
       exit 60
       ;;
   esac
-
   echo
   echo "=== EVIDENCE SYNC ==="
   cmd_sync
@@ -222,18 +204,12 @@ cmd_run() {
 }
 
 cmd_mark() {
-  gate="${1:-}"
-  value="${2:-}"
-  [ -n "$gate" ] && [ -n "$value" ] || {
-    echo "usage: $0 mark GATE {PASS|FAIL|PENDING}"
-    exit 2
-  }
+  gate="${1:-}"; value="${2:-}"
+  [ -n "$gate" ] && [ -n "$value" ] || { echo "usage: $0 mark GATE {PASS|FAIL|PENDING}"; exit 2; }
   case "$value" in PASS|FAIL|PENDING) ;; *) echo "INVALID_VALUE=$value"; exit 3 ;; esac
-
   valid=0
   for g in "${GATES[@]}"; do [ "$g" = "$gate" ] && valid=1; done
   [ "$valid" -eq 1 ] || { echo "UNKNOWN_GATE=$gate"; exit 4; }
-
   set_gate "$gate" "$value"
   echo "$gate=$value"
   echo "FIRST_RED_GATE=$(first_red_gate)"
@@ -243,7 +219,7 @@ cmd_audit() {
   fail=0
   required=(
     design/production/WOOK-C0-GOLDEN-SLICE-001.md
-    design/production/WOOK-C0-GOLDEN-SLICE-001.yaml
+    design/production/WOOK-C0-HUD-MENU-001.md
     design/production/WOOK-SDLC-COMMAND-TO-PROOF.md
     design/gameplay/WOOK-FULL-GAMEPLAY-MAP-BY-MAP.md
     design/systems/WOOK-HUD-STATE-RUNTIME-ARCHITECTURE.md
@@ -253,6 +229,9 @@ cmd_audit() {
     scripts/implement-character-golden-001.sh
     scripts/implement-c0-handstand-dan-001.sh
     scripts/implement-c0-crocs-collision-001.sh
+    scripts/implement-c0-hud-menu-001.sh
+    scripts/audit-c0-hud-menu-001.sh
+    tools/build-c0-hud-menu.py
   )
   for f in "${required[@]}"; do
     if [ -s "$f" ]; then echo "PASS $f"; else echo "FAIL $f"; fail=1; fi
@@ -263,18 +242,16 @@ cmd_audit() {
     scripts/run-character-golden-001.sh \
     scripts/implement-character-golden-001.sh \
     scripts/implement-c0-handstand-dan-001.sh \
-    scripts/implement-c0-crocs-collision-001.sh
+    scripts/implement-c0-crocs-collision-001.sh \
+    scripts/implement-c0-hud-menu-001.sh \
+    scripts/audit-c0-hud-menu-001.sh
   do
-    if [ -s "$s" ]; then
-      bash -n "$s" || fail=1
-      echo "SYNTAX_PASS=$s"
-    fi
+    if [ -s "$s" ]; then bash -n "$s" || fail=1; echo "SYNTAX_PASS=$s"; fi
   done
+  python -m py_compile tools/build-c0-hud-menu.py || fail=1
+  echo "PYTHON_SYNTAX_PASS=tools/build-c0-hud-menu.py"
 
-  if [ "$fail" -ne 0 ]; then
-    echo "C0_GOLDEN_SLICE_AUDIT=FAIL"
-    exit 20
-  fi
+  if [ "$fail" -ne 0 ]; then echo "C0_GOLDEN_SLICE_AUDIT=FAIL"; exit 20; fi
   echo "C0_GOLDEN_SLICE_AUDIT=PASS"
 }
 
@@ -286,7 +263,6 @@ cmd_receipt() {
     echo "FIRST_RED_GATE=$gate"
     exit 30
   fi
-
   tmp="$STATE_FILE.tmp"
   jq '.result="QUALIFIED"' "$STATE_FILE" > "$tmp"
   mv "$tmp" "$STATE_FILE"
