@@ -16,7 +16,6 @@ echo "======================================================================"
 
 [ -s "$STATE" ] || { echo "C0_STATE=MISSING"; exit 10; }
 
-# All gates before REGRESSION must be PASS. RECEIPT is intentionally excluded.
 pre=(PAPA_WOOK_CONTROLLER SNIFFANY HANDSTAND_DAN RACCOON_ENCOUNTER CROCS_0_TO_2 COLLISION_TOPOLOGY HUD PHONE INVENTORY QUEST_LOG GROUNDSCORE RESPONSIBILITY WOOK_KARMA SIDE_QUEST SECRET SAVE_RELOAD GA_EXIT NATIVE_WEB ROM VISUAL_QA)
 for g in "${pre[@]}"; do
   v="$(jq -r --arg g "$g" '.gates[$g]' "$STATE")"
@@ -34,6 +33,7 @@ checks=(
   "C0-SECRET-LATEST.json:WOOK_C0_SECRET_NATIVE_PASS"
   "C0-SAVE-RELOAD-LATEST.json:WOOK_C0_SAVE_RELOAD_NATIVE_PATH_PASS"
   "C0-GA-EXIT-LATEST.json:WOOK_C0_GA_EXIT_NATIVE_PASS"
+  "C0-VISUAL-QA-LATEST.json:WOOK_C0_VISUAL_QA_PASS"
 )
 for pair in "${checks[@]}"; do
   f="${pair%%:*}"; expected="${pair#*:}"
@@ -43,7 +43,6 @@ for pair in "${checks[@]}"; do
   echo "RECEIPT_PASS=$f"
 done
 
-# Re-run static subsystem audits against the integrated project body.
 audits=(
  scripts/audit-character-golden-001.sh
  scripts/audit-c0-handstand-dan-001.sh
@@ -57,11 +56,10 @@ audits=(
 )
 for a in "${audits[@]}"; do
   [ -s "$a" ] || { echo "AUDIT_SCRIPT_MISSING=$a"; exit 23; }
-  bash "$a"
+  WOOK_ROOT="$ROOT" bash "$a"
   echo "REGRESSION_AUDIT_PASS=$a"
 done
 
-# C01 may exist as an entry seam only. C00 cannot qualify it.
 MAN="$ROOT/docs/proof/C0-GA-EXIT-MANIFEST.json"
 jq -e '.target_truth=="C01_ENTRY_SEAM_ONLY" and .c01_qualified==false' "$MAN" >/dev/null || { echo "C01_TRUTH_GUARD=FAIL"; exit 24; }
 echo "C01_TRUTH_GUARD=PASS"
@@ -99,7 +97,7 @@ jq -n --arg ts "$STAMP" --arg rom "$ROM_SHA" --arg web "$WEB_SHA" '{
  schema:"ghost-atlas.wook.c0.regression-proof.v1",
  packet:"WOOK-C0-REGRESSION-001",
  timestamp:$ts,
- proof:{prior_gates:"PASS",receipt_chain:"PASS",static_regression:"PASS",c01_truth_guard:"PASS",integrated_native_web:"PASS",integrated_native_rom:"PASS"},
+ proof:{prior_gates:"PASS",receipt_chain:"PASS",visual_evidence:"PASS",static_regression:"PASS",c01_truth_guard:"PASS",integrated_native_web:"PASS",integrated_native_rom:"PASS"},
  hashes:{rom:$rom,native_web:$web},
  result:"WOOK_C0_REGRESSION_PASS"
 }' > "$R"
