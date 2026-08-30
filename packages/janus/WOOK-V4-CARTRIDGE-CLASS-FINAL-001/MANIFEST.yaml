@@ -5,10 +5,17 @@ production_branch: architecture/character-detail-level10
 proven_main_head: f218ea92fd9bfa39d8c6ddd5b3afeb64d2bbb67d
 package_baseline_head: 51f909b1f24fddf10c391100256e9cdbda28fb1b
 next_campaign: WOOK-C0-GOLDEN-SLICE-001
-next_character_packet: WOOK-C0-HANDSTAND-DAN-001
+production_packets:
+  - WOOK-C0-HANDSTAND-DAN-001
+  - WOOK-C0-CROCS-COLLISION-001
+next_execution_packet: WOOK-C0-HANDSTAND-DAN-001
+next_after_character_proof: WOOK-C0-CROCS-COLLISION-001
+next_architecture_seam: HUD_PHONE_INVENTORY_QUEST_LOG
 truth:
   native_gb_factory: PROVEN
   cartridge_class_architecture: ASSEMBLED
+  handstand_dan_packet: COMMITTED_PENDING_NATIVE_EXECUTION
+  crocs_collision_packet: COMMITTED_PENDING_NATIVE_EXECUTION
   c0_complete: false
   c1_c15_implemented: false
   dx_implemented: false
