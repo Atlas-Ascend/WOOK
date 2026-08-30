@@ -1,7 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -Eeuo pipefail
 
-ROOT="${WOOK_ROOT:-$HOME/.ghost-atlas/games/WOOK}"
+# Resolve the repository from the script location unless the caller explicitly
+# provides WOOK_ROOT. This makes safe/non-destructive checkouts first-class and
+# prevents nested controllers from silently jumping to the primary dirty tree.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="${WOOK_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+export WOOK_ROOT="$ROOT"
+
 CAMPAIGN="$ROOT/campaigns/WOOK-ENCYCLOPEDIA-COMMAND-TO-PROOF-001/campaign.json"
 STATE_DIR="$ROOT/docs/proof/whole-game"
 STATE="$STATE_DIR/state.json"
@@ -9,7 +15,12 @@ mkdir -p "$STATE_DIR"
 cd "$ROOT"
 
 command -v jq >/dev/null 2>&1 || { echo "JQ=MISSING"; exit 20; }
-test -s "$CAMPAIGN" || { echo "CAMPAIGN_MANIFEST=MISSING"; exit 21; }
+test -s "$CAMPAIGN" || {
+  echo "CAMPAIGN_MANIFEST=MISSING"
+  echo "EXPECTED=$CAMPAIGN"
+  echo "ACTIVE_ROOT=$ROOT"
+  exit 21
+}
 
 ensure_state() {
   if [ ! -s "$STATE" ]; then
@@ -97,6 +108,7 @@ cmd_audit() {
   )
 
   echo "=== WOOK ENCYCLOPEDIA AUDIT ==="
+  echo "ACTIVE_ROOT=$ROOT"
   for f in "${required[@]}"; do
     if [ -s "$f" ]; then echo "PASS $f"; else echo "FAIL $f"; fail=1; fi
   done
@@ -125,6 +137,7 @@ cmd_status() {
   echo "======================================================================"
   echo " WOOK // ENCYCLOPEDIA COMMAND TO PROOF"
   echo "======================================================================"
+  echo "ACTIVE_ROOT=$ROOT"
   while IFS= read -r cid; do
     local title status srl
     title="$(jq -r --arg c "$cid" '.chapters[$c].title' "$STATE")"
@@ -164,7 +177,7 @@ cmd_run() {
   fi
 
   if [ "$cid" = "C00" ]; then
-    bash scripts/wook-c0-golden-slice-controller.sh run
+    WOOK_ROOT="$ROOT" bash scripts/wook-c0-golden-slice-controller.sh run
     sync_evidence || true
     echo "FIRST_RED=$(first_red)"
     return 0
@@ -172,13 +185,13 @@ cmd_run() {
 
   local impl="scripts/implement-${cid,,}.sh"
   if [ -x "$impl" ] || [ -s "$impl" ]; then
-    bash "$impl"
+    WOOK_ROOT="$ROOT" bash "$impl"
     sync_evidence || true
     echo "FIRST_RED=$(first_red)"
     return 0
   fi
 
-  bash scripts/wook-chapter-packet.sh prepare "$cid"
+  WOOK_ROOT="$ROOT" bash scripts/wook-chapter-packet.sh prepare "$cid"
   echo "IMPLEMENTATION_PACKET_REQUIRED=$cid"
   echo "TRUTH=ARCHITECTURE_READY_NATIVE_IMPLEMENTATION_NOT_YET_PROVEN"
   exit 60
@@ -187,7 +200,7 @@ cmd_run() {
 cmd_report() {
   sync_evidence >/dev/null || true
   ensure_state
-  jq --arg red "$(first_red)" '. + {first_red:$red}' "$STATE"
+  jq --arg red "$(first_red)" '. + {first_red:$red,active_root:"'"$ROOT"'"}' "$STATE"
 }
 
 cmd_prove() {
