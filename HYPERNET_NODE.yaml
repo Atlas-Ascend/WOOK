@@ -1,0 +1,8 @@
+schema: ghost-atlas.hypernet.node/v1
+repository: Atlas-Ascend/WOOK
+lifecycle: product
+plane: public-creative
+role: bounded-game-and-publication-product
+hypernets: [github, vercel, cloud]
+runtime_authority: none
+routing: {authorization: Janus-Prime, io: Crowngrid, discovery: Estate-Service-Catalog-Capability-Registry, transport: Ghost-Atlas-Estate-Service-Mesh-Runtime-Connectivity-Fabric, events: Ghost-Atlas-Estate-Event-Gateway, observability: Ghost-Atlas-Runtime-Observatory, quality: SECA}
